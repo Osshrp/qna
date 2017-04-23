@@ -15,10 +15,12 @@ feature 'Create question', %q{
     visit questions_path
     click_on 'Ask question'
     fill_in 'Title', with: 'Question title'
-    fill_in 'Body', with: 'text'
+    fill_in 'Body', with: 'text text'
     click_on 'Create'
 
     expect(page).to have_content 'Your question successfully created'
+    expect(page).to have_content 'Question title'
+    expect(page).to have_content 'text text'
   end
   scenario 'Unauthenticated user create question' do
     visit questions_path
