@@ -5,6 +5,7 @@ feature 'View question', %q{
   I need to be able to viiew question
   and answers to that question
 } do
+
   scenario 'Authenticated user views the question and answers'
   scenario 'Unauthenticated user views the questions and answers'
 end
