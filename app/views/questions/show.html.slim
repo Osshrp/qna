@@ -1,2 +1,15 @@
-p= @question.title
-p= @question.body
+.panel.panel-default
+  .panel-heading
+    = @question.title
+  .panel-body
+    = @question.body
+    h4 Answers
+    ul.list-group
+    - @question.answers.each do |answer|
+      li.list-group-item= answer.body
+    = form_for [@question, @answer] do |f|
+      .form-group
+        = f.label :body, 'Answer'
+        = f.text_field :body, class: 'form-control'
+      .form-group
+        = f.submit 'Create answer'

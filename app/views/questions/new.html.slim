@@ -1,6 +1,9 @@
 = form_for @question do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Create'
+  .form-group
+    = f.label :title
+    = f.text_field :title, class: 'form-control'
+  .form-group
+    = f.label :body
+    = f.text_area :body, class: 'form-control'
+  .form-group
+    = f.submit 'Create queston', class: 'btn btn-primary'
