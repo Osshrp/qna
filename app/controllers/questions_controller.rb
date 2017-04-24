@@ -23,14 +23,16 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
     else
+      set_flash
       render :new
     end
   end
 
   def update
     if @question.update(question_params)
-      redirect_to @question
+      redirect_to @question, notice: 'Your question successfully updated'
     else
+      set_flash
       render :edit
     end
   end
@@ -48,5 +50,9 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def set_flash
+    flash[:alert] = @question.errors.full_messages
   end
 end
