@@ -1,4 +1,4 @@
-ul
+ul.list-group
   - @questions.each do |question|
-    li= link_to question.title, question_path(question)
+    li.list-group-item= link_to question.title, question_path(question)
 p= link_to 'Ask question', new_question_path

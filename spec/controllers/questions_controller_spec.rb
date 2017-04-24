@@ -20,6 +20,11 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns requested question to @question' do
       expect(assigns(:question)).to eq question
     end
+
+    it 'assigns a new Answer to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
     it 'renders show view' do
       expect(response).to render_template :show
     end
@@ -27,7 +32,6 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #new' do
     sign_in_user
-
     before { get :new }
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
@@ -100,14 +104,16 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      let(:title) { question.title }
+      let(:body) { question.body }
       before do
         patch :update, params: { id: question,
           question: { title: 'new_title', body: nil } }
       end
       it 'does not change @question attributes' do
         question.reload
-        expect(question.title).to eq 'MyString'
-        expect(question.body).to eq 'MyText'
+        expect(question.title).to eq title
+        expect(question.body).to eq body
       end
 
       it 're-renders edit view' do

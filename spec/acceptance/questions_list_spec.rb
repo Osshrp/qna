@@ -12,13 +12,13 @@ feature 'Questions list', %q{
     sign_in(user)
     visit questions_path
 
-    expect(page).to have_content 'MyString1'
-    expect(page).to have_content 'MyString2'
+    expect(page).to have_content questions.first.title
+    expect(page).to have_content questions.last.title
   end
 
   scenario 'Unauthenticated user views list of question' do
     visit questions_path
-    expect(page).to have_content 'MyString3'
-    expect(page).to have_content 'MyString4'
+    expect(page).to have_content  questions.first.title
+    expect(page).to have_content questions.last.title
   end
 end
