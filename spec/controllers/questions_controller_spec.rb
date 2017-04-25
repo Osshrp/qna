@@ -123,15 +123,21 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
-    before { question }
+    # sign_in_user
+    # let(:user_with_questions) { create(:user_with_questions) }
+    before do
+      @user = create(:user_with_questions)
+      @request.env['devise_mapping'] = Devise.mappings[:user_with_questions]
+      sign_in @user
+    end
+    # before { question }
     it 'deletes question' do
-      expect { delete :destroy, params: { id: question } }
+      expect { delete :destroy, params: { id: @user.questions.first } }
         .to change(Question, :count).by(-1)
     end
 
     it 'redirects to index view' do
-      delete :destroy, params: { id: question }
+      delete :destroy, params: { id: @user.questions.first }
       expect(response).to redirect_to questions_path
     end
   end

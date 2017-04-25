@@ -9,11 +9,9 @@ feature 'Create question', %q{
   given(:user) { create(:user) }
 
   scenario 'Authenticated user create question' do
-
     sign_in(user)
 
-    visit questions_path
-    click_on 'Ask question'
+    ask_question_link
     fill_in 'Title', with: 'Question title'
     fill_in 'Body', with: 'text text'
     click_on 'Create'
@@ -22,10 +20,19 @@ feature 'Create question', %q{
     expect(page).to have_content 'Question title'
     expect(page).to have_content 'text text'
   end
-  scenario 'Unauthenticated user create question' do
-    visit questions_path
-    click_on 'Ask question'
 
+  scenario 'Authenticated user tries to create question with blank fields' do
+    sign_in(user)
+
+    ask_question_link
+    click_on 'Create'
+
+    expect(page).to have_content "Title can't be blank"
+    expect(page).to have_content "Body can't be blank"
+  end
+
+  scenario 'Unauthenticated user create question' do
+    ask_question_link
     expect(page).to have_content 'You need to sign in or sign up before continuing'
   end
 end

@@ -6,6 +6,7 @@ FactoryGirl.define do
   factory :question do
     title
     body 'MyText'
+    user
 
     factory :question_with_answers do
       transient do
