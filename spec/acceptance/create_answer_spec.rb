@@ -19,12 +19,19 @@ feature 'Create answer', %q{
     expect(page).to have_content 'Answer text'
   end
 
-  # scenario 'Authenticated user tries to create answer with blank answer' do
-  #   sign_in(user)
-  #   visit question_path(question)
-  #   click_on 'Create answer'
-  #
-  #   expect(page).to have_content 'Answer '
-  # end
-  scenario 'Unauthenticated user answers the question'
+  scenario 'Authenticated user tries to create answer with blank body field' do
+    sign_in(user)
+    visit question_path(question)
+    click_on 'Create answer'
+
+    expect(page).to have_content "Body can't be blank"
+  end
+  scenario 'Unauthenticated user answers the question' do
+    visit question_path(question)
+
+    fill_in 'answer_body', with: 'Answer text'
+    click_on 'Create answer'
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing'
+  end
 end

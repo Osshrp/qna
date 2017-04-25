@@ -1,1 +1,3 @@
 p= @answer.body
+- if current_user == @answer.user
+  = link_to 'Delete answer', @answer, method: :delete, class: 'btn btn-primary'

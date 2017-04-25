@@ -2,11 +2,14 @@
   .panel-heading
     = @question.title
   .panel-body
-    = @question.body
+    p= @question.body
+    - if current_user == @question.user
+      .delete
+      = link_to 'Delete question', @question, method: :delete, class: 'btn btn-primary'
     h4 Answers
     ul.list-group
     - @question.answers.each do |answer|
-      li.list-group-item= answer.body
+      li.list-group-item = link_to answer.body, answer_path(answer)
     = form_for [@question, @answer] do |f|
       .form-group
         = f.label :body, 'Answer'
