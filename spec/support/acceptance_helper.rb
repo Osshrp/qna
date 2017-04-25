@@ -10,4 +10,12 @@ module AcceptanceHelper
     visit questions_path
     click_on 'Ask question'
   end
+
+  def visit_and_check_question
+    visit question_path(answer.question)
+
+    expect(page).to have_content 'MyText'
+    expect(page).to have_content 'AnswerText'
+    expect(page).to have_content 'MyString1'
+  end
 end
