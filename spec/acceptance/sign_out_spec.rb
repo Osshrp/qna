@@ -12,7 +12,9 @@ feature 'User sign out', %q{
     click_on 'Sign out'
 
     expect(page).to have_content 'Signed out successfully'
+    expect(page).to have_content 'Sign in'
   end
+
   scenario 'Unauthenticated user try to sign out' do
     visit questions_path
 
