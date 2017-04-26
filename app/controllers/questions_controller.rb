@@ -29,17 +29,27 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question, notice: 'Your question successfully updated'
+    if user_has_rights?
+      if @question.update(question_params)
+        redirect_to @question, notice: 'Your question successfully updated'
+      else
+        set_flash
+        render :edit
+      end
     else
-      set_flash
-      render :edit
+      redirect_to questions_path,
+        notice: 'You do not have permission to update this question'
     end
   end
 
   def destroy
-    current_user.questions.find(params[:id]).destroy
-    redirect_to questions_path, notice: 'Your question successfully deleted'
+    if user_has_rights?
+      @question.destroy
+      redirect_to questions_path, notice: 'Your question successfully deleted'
+    else
+      redirect_to questions_path,
+        notice: 'You do not have permission to delete this question'
+    end
   end
 
   private
@@ -53,6 +63,10 @@ class QuestionsController < ApplicationController
   end
 
   def set_flash
-    flash[:alert] = @question.errors.full_messages
+    flash.now[:alert] = @question.errors.full_messages
+  end
+
+  def user_has_rights?
+    current_user == @question.user ? true : false
   end
 end

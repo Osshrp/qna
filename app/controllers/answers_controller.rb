@@ -19,8 +19,12 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted'
+    if current_user == @answer.user
+      @answer.destroy
+      redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted'
+    else
+      redirect_to questions_path, notice: 'You do not have permission to delete this answer'
+    end
   end
 
   private

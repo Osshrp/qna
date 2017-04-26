@@ -62,6 +62,12 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post :create, params: { question: attributes_for(:question) } }
           .to change(Question, :count).by(1)
       end
+
+      it 'associates question with the user' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(assigns(:question).user).to eq @user
+      end
+
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
@@ -123,21 +129,29 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    # sign_in_user
-    # let(:user_with_questions) { create(:user_with_questions) }
-    before do
-      @user = create(:user_with_questions)
-      @request.env['devise_mapping'] = Devise.mappings[:user_with_questions]
-      sign_in @user
+    sign_in_user
+    let!(:users_question) do
+      @user.questions.create(attributes_for(:question, user: @user))
     end
-    # before { question }
+    before { question }
+
     it 'deletes question' do
-      expect { delete :destroy, params: { id: @user.questions.first } }
+      expect { delete :destroy, params: { id: users_question } }
         .to change(Question, :count).by(-1)
     end
 
     it 'redirects to index view' do
-      delete :destroy, params: { id: @user.questions.first }
+      delete :destroy, params: { id: users_question }
+      expect(response).to redirect_to questions_path
+    end
+
+    it 'tries to delete question by another user' do
+      expect { delete :destroy, params: { id: question } }
+        .to change(Question, :count).by(0)
+    end
+
+    it 'redirects to questions index view' do
+      delete :destroy, params: { id: question }
       expect(response).to redirect_to questions_path
     end
   end

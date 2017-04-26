@@ -17,6 +17,7 @@ feature 'Create answer', %q{
     click_on 'Create answer'
 
     expect(page).to have_content 'Answer text'
+    expect(page).to have_content 'Your answer was successfully created'
   end
 
   scenario 'Authenticated user tries to create answer with blank body field' do
