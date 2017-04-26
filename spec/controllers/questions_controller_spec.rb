@@ -89,41 +89,64 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
+    let!(:users_question) do
+      @user.questions.create(attributes_for(:question, user: @user))
+    end
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(assigns(:question)).to eq question
+        patch :update, params: { id: users_question,
+          question: attributes_for(:question) }
+        expect(assigns(:question)).to eq users_question
       end
 
       it 'change question attributes' do
-        patch :update, params: { id: question,
+        patch :update, params: { id: users_question,
           question: { title: 'new_title', body: 'new_body' } }
-        question.reload
-        expect(question.title).to eq 'new_title'
-        expect(question.body).to eq 'new_body'
+        users_question.reload
+        expect(users_question.title).to eq 'new_title'
+        expect(users_question.body).to eq 'new_body'
       end
 
       it 'redirects to updated @question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(response).to redirect_to question
+        patch :update, params: { id: users_question,
+          question: attributes_for(:question) }
+        expect(response).to redirect_to users_question
       end
     end
 
     context 'with invalid attributes' do
+      let(:title) { users_question.title }
+      let(:body) { users_question.body }
+      before do
+        patch :update, params: { id: users_question,
+          question: { title: 'new_title', body: nil } }
+      end
+      it 'does not change @question attributes' do
+        users_question.reload
+        expect(users_question.title).to eq title
+        expect(users_question.body).to eq body
+      end
+
+      it 're-renders edit view' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'user tries to update question that does not belong to him' do
       let(:title) { question.title }
       let(:body) { question.body }
       before do
         patch :update, params: { id: question,
-          question: { title: 'new_title', body: nil } }
+          question: { title: 'new_title', body: 'new_body' } }
       end
-      it 'does not change @question attributes' do
+      it 'does not update question attributes' do
         question.reload
         expect(question.title).to eq title
         expect(question.body).to eq body
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'redirects to index view' do
+        expect(response).to redirect_to questions_path
       end
     end
   end
