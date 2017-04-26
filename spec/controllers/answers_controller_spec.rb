@@ -25,6 +25,13 @@ RSpec.describe AnswersController, type: :controller do
                                          answer: attributes_for(:answer) } }
           .to change(Answer, :count).by(1)
       end
+
+      it 'associates answer with the user' do
+        post :create, params: { question_id: question,
+                                answer: attributes_for(:answer) }
+        expect(assigns(:answer).user).to eq @user
+      end
+
       it 'redirects to show view' do
         post :create, params: { question_id: question,
                                 answer: attributes_for(:answer) }
@@ -49,15 +56,31 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'DELETE #destroy' do
     sign_in_user
+    let!(:users_answer) do
+      @user.answers.create(attributes_for(:answer, user: @user,
+                                            question_id: question.id))
+    end
+
     before { answer }
-    it 'deletes answer' do
-      expect { delete :destroy, params: { id: answer } }
+
+    it 'deletes answer by author' do
+      expect { delete :destroy, params: { id: users_answer } }
         .to change(Answer, :count).by(-1)
     end
 
-    it 'redirects to qestions index view' do
+    it 'redirects to question show view' do
+      delete :destroy, params: { id: users_answer }
+      expect(response).to redirect_to question_path(users_answer.question)
+    end
+
+    it 'deletes answer by another user' do
+      expect { delete :destroy, params: { id: answer } }
+        .to change(Answer, :count).by(0)
+    end
+
+    it 'redirects to questions index view' do
       delete :destroy, params: { id: answer }
-      expect(response).to redirect_to question_path(answer.question)
+      expect(response).to redirect_to questions_path
     end
   end
 end

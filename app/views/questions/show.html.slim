@@ -9,7 +9,8 @@
     h4 Answers
     ul.list-group
     - @question.answers.each do |answer|
-      li.list-group-item = link_to answer.body, answer_path(answer)
+      - unless answer.new_record?
+        li.list-group-item = link_to answer.body, answer_path(answer)
     = form_for [@question, @answer] do |f|
       .form-group
         = f.label :body, 'Answer'
