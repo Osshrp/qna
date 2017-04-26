@@ -35,4 +35,11 @@ feature 'Create question', %q{
     ask_question_link
     expect(page).to have_content 'You need to sign in or sign up before continuing'
   end
+
+  private
+
+  def ask_question_link
+    visit questions_path
+    click_on 'Ask question'
+  end
 end
