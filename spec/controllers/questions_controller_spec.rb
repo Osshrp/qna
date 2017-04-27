@@ -58,10 +58,6 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'POST #create' do
     sign_in_user
     context 'with valid attributes' do
-      it 'saves new question in database' do
-        expect { post :create, params: { question: attributes_for(:question) } }
-          .to change(Question, :count).by(1)
-      end
 
       it 'associates question with the user' do
         expect { post :create, params: { question: attributes_for(:question) } }
@@ -89,9 +85,8 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
-    let!(:users_question) do
-      @user.questions.create(attributes_for(:question, user: @user))
-    end
+    let!(:users_question) { create(:question, user: @user) }
+
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
         patch :update, params: { id: users_question,
@@ -153,9 +148,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     sign_in_user
-    let!(:users_question) do
-      @user.questions.create(attributes_for(:question, user: @user))
-    end
+    let!(:users_question) { create(:question, user: @user) }
     before { question }
 
     context 'author tries to delete question' do

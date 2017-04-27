@@ -23,17 +23,15 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
     else
-      set_flash
       render :new
     end
   end
 
   def update
-    if current_user && current_user.author_of?(@question)
+    if current_user.author_of?(@question)
       if @question.update(question_params)
         redirect_to @question, notice: 'Your question successfully updated'
       else
-        set_flash
         render :edit
       end
     else
@@ -43,7 +41,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user && current_user.author_of?(@question)
+    if current_user.author_of?(@question)
       @question.destroy
       redirect_to questions_path, notice: 'Your question successfully deleted'
     else
@@ -60,9 +58,5 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
-  end
-
-  def set_flash
-    flash.now[:alert] = @question.errors.full_messages
   end
 end

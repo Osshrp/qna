@@ -1,3 +1,7 @@
+- if @question.invalid?
+  - @question.errors.full_messages.each do |error|
+    p= error
+
 = form_for @question do |f|
   .form-group
     = f.label :title

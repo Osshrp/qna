@@ -9,8 +9,13 @@
     h4 Answers
     ul.list-group
     - @question.answers.each do |answer|
+      - if answer.invalid?
+          - answer.errors.full_messages.each do |error|
+            p= error
       - if answer.persisted?
-        li.list-group-item = link_to answer.body, answer_path(answer)
+        li.list-group-item = answer.body
+        - if current_user && current_user.author_of?(answer)
+          = link_to 'Delete answer', answer, method: :delete
     = form_for [@question, @answer] do |f|
       .form-group
         = f.label :body, 'Answer'
