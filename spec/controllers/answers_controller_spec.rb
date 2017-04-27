@@ -27,9 +27,9 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'associates answer with the user' do
-        post :create, params: { question_id: question,
-                                answer: attributes_for(:answer) }
-        expect(assigns(:answer).user).to eq @user
+        expect { post :create, params: { question_id: question,
+                                answer: attributes_for(:answer) } }
+          .to change(@user.answers, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -49,7 +49,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to question show view' do
         post :create, params: { question_id: question,
                                 answer: attributes_for(:invalid_answer) }
-        expect(response).to redirect_to question_path(assigns(:question))
+        expect(response).to render_template('questions/show')
       end
     end
   end
@@ -63,24 +63,28 @@ RSpec.describe AnswersController, type: :controller do
 
     before { answer }
 
-    it 'deletes answer by author' do
-      expect { delete :destroy, params: { id: users_answer } }
-        .to change(Answer, :count).by(-1)
+    context 'author tries to delete answer' do
+      it 'deletes answer' do
+        expect { delete :destroy, params: { id: users_answer } }
+          .to change(Answer, :count).by(-1)
+      end
+
+      it 'redirects to question show view' do
+        delete :destroy, params: { id: users_answer }
+        expect(response).to redirect_to question_path(users_answer.question)
+      end
     end
 
-    it 'redirects to question show view' do
-      delete :destroy, params: { id: users_answer }
-      expect(response).to redirect_to question_path(users_answer.question)
-    end
+    context 'user tries to deletes answer that does not belongs to him' do
+      it 'does not deletes answer' do
+        expect { delete :destroy, params: { id: answer } }
+          .to_not change(Answer, :count)
+      end
 
-    it 'deletes answer by another user' do
-      expect { delete :destroy, params: { id: answer } }
-        .to change(Answer, :count).by(0)
-    end
-
-    it 'redirects to questions index view' do
-      delete :destroy, params: { id: answer }
-      expect(response).to redirect_to questions_path
+      it 'redirects to questions index view' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to questions_path
+      end
     end
   end
 end

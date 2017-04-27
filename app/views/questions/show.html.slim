@@ -3,13 +3,13 @@
     = @question.title
   .panel-body
     p= @question.body
-    - if current_user == @question.user
+    - if current_user && current_user.author_of?(@question)
       .delete
       = link_to 'Delete question', @question, method: :delete, class: 'btn btn-primary'
     h4 Answers
     ul.list-group
     - @question.answers.each do |answer|
-      - unless answer.new_record?
+      - if answer.persisted?
         li.list-group-item = link_to answer.body, answer_path(answer)
     = form_for [@question, @answer] do |f|
       .form-group
