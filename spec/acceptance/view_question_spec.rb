@@ -6,8 +6,9 @@ feature 'View question', %q{
   and answers to that question
 } do
   given(:user) { create(:user) }
-  given!(:answer) { create(:answer) }
-  given!(:question) { answer.question }
+  # given!(:answer) { create(:answer) }
+  # given!(:question) { answer.question }
+  given(:question) { create(:question_with_answers) }
 
   scenario 'Authenticated user views the question and answers to that question' do
     sign_in(user)
@@ -20,10 +21,11 @@ feature 'View question', %q{
   private
 
   def visit_and_check_question
-    visit question_path(answer.question)
+    visit question_path(question)
 
     expect(page).to have_content 'MyText'
-    expect(page).to have_content 'AnswerText'
+    expect(page).to have_content question.answers.first.body
+    expect(page).to have_content question.answers.last.body
     expect(page).to have_content 'MyString'
   end
 end
