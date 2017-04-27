@@ -9,11 +9,11 @@ RSpec.describe User do
   let(:user) { create(:user) }
   let(:user_with_questions) { create(:user_with_questions) }
 
-  it 'should return true so as user is author of the entity' do
+  it '#author_of should return true so as user is author of the entity' do
     expect(user_with_questions).to be_author_of(user_with_questions.questions.first)
   end
 
-  it 'should return false so as user is not author of the entity' do
+  it '#author_of should return false so as user is not author of the entity' do
     expect(user).to_not be_author_of(user_with_questions.questions.first)
   end
 end
