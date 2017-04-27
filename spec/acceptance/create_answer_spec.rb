@@ -30,9 +30,9 @@ feature 'Create answer', %q{
   scenario 'Unauthenticated user answers the question' do
     visit question_path(question)
 
-    fill_in 'answer_body', with: 'Answer text'
-    click_on 'Create answer'
+    # fill_in 'answer_body', with: 'Answer text'
+    # click_on 'Create answer'
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing'
+    expect(page).to have_no_selector('input')
   end
 end

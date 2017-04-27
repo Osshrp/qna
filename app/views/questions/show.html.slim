@@ -16,9 +16,10 @@
         li.list-group-item = answer.body
         - if current_user && current_user.author_of?(answer)
           = link_to 'Delete answer', answer, method: :delete
-    = form_for [@question, @answer] do |f|
-      .form-group
-        = f.label :body, 'Answer'
-        = f.text_field :body, class: 'form-control'
-      .form-group
-        = f.submit 'Create answer', class: 'btn btn-primary'
+    - if user_signed_in?
+      = form_for [@question, @answer] do |f|
+        .form-group
+          = f.label :body, 'Answer'
+          = f.text_field :body, class: 'form-control'
+        .form-group
+          = f.submit 'Create answer', class: 'btn btn-primary'
