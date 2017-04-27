@@ -64,8 +64,8 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'associates question with the user' do
-        post :create, params: { question: attributes_for(:question) }
-        expect(assigns(:question).user).to eq @user
+        expect { post :create, params: { question: attributes_for(:question) } }
+          .to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -158,24 +158,28 @@ RSpec.describe QuestionsController, type: :controller do
     end
     before { question }
 
-    it 'deletes question' do
-      expect { delete :destroy, params: { id: users_question } }
-        .to change(Question, :count).by(-1)
+    context 'author tries to delete question' do
+      it 'deletes question' do
+        expect { delete :destroy, params: { id: users_question } }
+          .to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to index view' do
+        delete :destroy, params: { id: users_question }
+        expect(response).to redirect_to questions_path
+      end
     end
 
-    it 'redirects to index view' do
-      delete :destroy, params: { id: users_question }
-      expect(response).to redirect_to questions_path
-    end
+    context 'user tries to delete question that does not belongs to him' do
+      it 'does not deletes question' do
+        expect { delete :destroy, params: { id: question } }
+          .to_not change(Question, :count)
+      end
 
-    it 'tries to delete question by another user' do
-      expect { delete :destroy, params: { id: question } }
-        .to change(Question, :count).by(0)
-    end
-
-    it 'redirects to questions index view' do
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to questions_path
+      it 'redirects to questions index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
     end
   end
 end

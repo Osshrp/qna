@@ -14,12 +14,12 @@ class AnswersController < ApplicationController
       redirect_to @answer, notice: 'Your answer was successfully created'
     else
       flash[:alert] = @answer.errors.full_messages
-      redirect_to @question
+      render 'questions/show'
     end
   end
 
   def destroy
-    if current_user == @answer.user
+    if current_user && current_user.author_of?(@answer)
       @answer.destroy
       redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted'
     else
