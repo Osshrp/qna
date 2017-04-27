@@ -4,27 +4,10 @@ RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer) }
   let(:question) { create(:question) }
 
-  describe 'GET #show' do
-    before { get :show, params: { id: answer } }
-
-    it 'assigns requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
   describe 'POST #create' do
     sign_in_user
     before { question }
     context 'with valid attributes' do
-      it 'saves new answer in database' do
-        expect { post :create, params: { question_id: question,
-                                         answer: attributes_for(:answer) } }
-          .to change(Answer, :count).by(1)
-      end
 
       it 'associates answer with the user' do
         expect { post :create, params: { question_id: question,
@@ -38,10 +21,10 @@ RSpec.describe AnswersController, type: :controller do
           .to change(question.answers, :count).by(1)
       end
 
-      it 'redirects to show view' do
+      it 'redirects to question#show view' do
         post :create, params: { question_id: question,
                                 answer: attributes_for(:answer) }
-        expect(response).to redirect_to answer_path(assigns(:answer))
+        expect(response).to redirect_to question_path(assigns(:answer).question)
       end
     end
 
@@ -62,10 +45,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'DELETE #destroy' do
     sign_in_user
-    let!(:users_answer) do
-      @user.answers.create(attributes_for(:answer, user: @user,
-                                            question_id: question.id))
-    end
+    let!(:users_answer) { create(:answer, user: @user, question_id: question.id) }
 
     before { answer }
 
