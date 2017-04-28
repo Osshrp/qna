@@ -7,17 +7,13 @@
       .delete
       = link_to 'Delete question', @question, method: :delete, class: 'btn btn-primary'
     h4 Answers
-    ul.list-group
-    - @question.answers.each do |answer|
-      - if answer.persisted?
-        li.list-group-item = answer.body
-        - if current_user && current_user.author_of?(answer)
-          = link_to 'Delete answer', answer, method: :delete
+    .answers
+      = render 'questions/answers'
     - if user_signed_in?
-      = form_for [@question, @answer] do |f|
+      = form_for [@question, @answer], remote: true do |f|
         = render 'common/errors', resource: @answer
         .form-group
           = f.label :body, 'Answer'
-          = f.text_field :body, class: 'form-control'
+          = f.text_area :body, class: 'form-control'
         .form-group
           = f.submit 'Create answer', class: 'btn btn-primary'

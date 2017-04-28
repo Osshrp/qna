@@ -47,6 +47,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'rails-controller-testing'
   gem 'letter_opener'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :test do

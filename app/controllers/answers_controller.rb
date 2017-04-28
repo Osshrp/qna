@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     if @answer.save
-      redirect_to @answer.question, notice: 'Your answer was successfully created'
+      # redirect_to @answer.question, notice: 'Your answer was successfully created'
     else
       render 'questions/show'
     end
