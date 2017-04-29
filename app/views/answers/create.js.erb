@@ -1,2 +1,2 @@
-$('.last-answer').html('<%= j render "questions/answer", answer: @answer %>');
+$('.answers').append('<%= j render "answers/answer", answer: @question.answers.last %>');
 $('#answer_body').val('');
