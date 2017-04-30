@@ -8,11 +8,11 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
 
-    if @answer.save
-      # redirect_to @answer.question, notice: 'Your answer was successfully created'
-    else
-      render 'questions/show'
-    end
+    @answer.save
+    #   # redirect_to @answer.question, notice: 'Your answer was successfully created'
+    # else
+    #   render 'questions/show'
+    # end
   end
 
   def destroy

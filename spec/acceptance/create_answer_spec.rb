@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'Create answer', %q{
   In order to answer to question
@@ -17,6 +17,14 @@ feature 'Create answer', %q{
     click_on 'Create answer'
 
     expect(page).to have_content 'Answer text'
+  end
+
+  scenario 'Authenticated user tries to create invalid answer', js: true do
+    sign_in(user)
+    visit question_path(question)
+    click_on 'Create answer'
+
+    expect(page).to have_content "Body can't be blank"
   end
 
   scenario 'Unauthenticated user answers the question' do
