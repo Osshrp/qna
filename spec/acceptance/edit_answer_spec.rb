@@ -26,9 +26,11 @@ feature 'Answer editing', %q{
         expect(page).to have_link 'Edit'
       end
     end
-    scenario 'tries to edit his answer' do
+    scenario 'tries to edit his answer', js: true do
       click_on 'Edit'
-      fill_in 'Answer', with: 'edited answer'
+      within '.answers' do
+        fill_in 'Answer', with: 'edited answer'
+      end
       click_on 'Save'
 
       expect(page).to_not have_content answer.body
