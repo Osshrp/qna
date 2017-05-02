@@ -8,17 +8,16 @@ feature 'Answer editing', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question) }
-  given(:answer) { create(:answer, question: question, user_id: user.id) }
+  given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Unuthenticated user tries to edit answer' do
     visit question_path(question)
 
     expect(page).to_not have_link 'Edit'
   end
-  scenario 'Author sees answer edit ling' do
+  scenario 'Author sees answer edit link' do
     sign_in(user)
     visit question_path(question)
-
     within '.answers' do
       expect(page).to have_link 'Edit'
     end
