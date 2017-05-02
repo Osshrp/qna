@@ -15,13 +15,26 @@ feature 'Answer editing', %q{
 
     expect(page).to_not have_link 'Edit'
   end
-  scenario 'Author sees answer edit link' do
-    sign_in(user)
-    visit question_path(question)
-    within '.answers' do
-      expect(page).to have_link 'Edit'
+
+  describe 'Authenticated user' do
+    before do
+      sign_in(user)
+      visit question_path(question)
     end
+    scenario 'sees answer edit link' do
+      within '.answers' do
+        expect(page).to have_link 'Edit'
+      end
+    end
+    scenario 'tries to edit his answer' do
+      click_on 'Edit'
+      fill_in 'Answer', with: 'edited answer'
+      click_on 'Save'
+
+      expect(page).to_not have_content answer.body
+      expect(page).to have_content 'edited answer'
+      expect(page).to_not have_selector 'textarea'
+    end
+    scenario "tries to edit other user's answer"
   end
-  scenario 'Author tries to edit his answer'
-  scenario "Authenticated user tries to edit other user's answer"
 end

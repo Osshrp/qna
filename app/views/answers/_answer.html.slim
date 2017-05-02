@@ -4,3 +4,8 @@ li.list-group-item = answer.body
     = link_to 'Delete answer', answer, method: :delete
     '
     = link_to 'Edit'
+    / - byebug
+    = form_for answer, remote: true do |f|
+      = f.label :body, 'Answer'
+      = f.text_area :body
+      = f.submit 'Save'
