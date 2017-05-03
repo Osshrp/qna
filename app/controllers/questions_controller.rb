@@ -29,14 +29,15 @@ class QuestionsController < ApplicationController
 
   def update
     if current_user.author_of?(@question)
-      if @question.update(question_params)
-        redirect_to @question, notice: 'Your question successfully updated'
-      else
-        render :edit
-      end
-    else
-      redirect_to questions_path,
-        notice: 'You do not have permission to update this question'
+      @question.update(question_params)
+      # if @question.update(question_params)
+      #   redirect_to @question, notice: 'Your question successfully updated'
+      # else
+      #   render :edit
+      # end
+    # else
+    #   redirect_to questions_path,
+    #     notice: 'You do not have permission to update this question'
     end
   end
 
