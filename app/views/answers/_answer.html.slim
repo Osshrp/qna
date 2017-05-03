@@ -1,11 +1,12 @@
-li.list-group-item = answer.body
-- if current_user && current_user.author_of?(answer)
-  .delete-edit-answer
-    = link_to 'Delete answer', answer, method: :delete
-    '
-    = link_to 'Edit'
-    / - byebug
-    = form_for answer, remote: true do |f|
-      = f.label :body, 'Answer'
-      = f.text_area :body
-      = f.submit 'Save'
+div id="answer-#{answer.id}"
+  li.list-group-item = answer.body
+  - if current_user && current_user.author_of?(answer)
+    .delete-edit-answer
+      = link_to 'Delete answer', answer, method: :delete
+      '
+      = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+      / - byebug
+      = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+        = f.label :body, 'Answer'
+        = f.text_area :body
+        = f.submit 'Save'
