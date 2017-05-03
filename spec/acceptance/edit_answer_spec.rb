@@ -37,6 +37,13 @@ feature 'Answer editing', %q{
         expect(page).to_not have_selector 'textarea'
       end
     end
-    scenario "tries to edit other user's answer"
+    let(:another_user) { create(:user) }
+    scenario "tries to edit other user's answer", js: true do
+      click_on 'Sign out'
+      sign_in(another_user)
+      visit question_path(question)
+
+      expect(page).to_not have_link 'Edit'
+    end
   end
 end

@@ -78,23 +78,35 @@ RSpec.describe AnswersController, type: :controller do
     sign_in_user
     let!(:users_answer) { create(:answer, user: @user, question_id: question.id) }
 
-    it 'assigns the requested answer to @answer' do
-      patch :update, params: { question_id: question, id: users_answer,
-        answer: attributes_for(:answer) }, format: :js
-      expect(assigns(:answer)).to eq users_answer
+    context 'author tries to update answer' do
+      it 'assigns the requested answer to @answer' do
+        patch :update, params: { question_id: question, id: users_answer,
+          answer: attributes_for(:answer) }, format: :js
+        expect(assigns(:answer)).to eq users_answer
+      end
+
+      it 'change answer attributes' do
+        patch :update, params: { question_id: question, id: users_answer,
+          answer: { body: 'new_body' } }, format: :js
+        users_answer.reload
+        expect(users_answer.body).to eq 'new_body'
+      end
+
+      it 'renders update template' do
+        patch :update, params: { question_id: question, id: users_answer,
+          answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :update
+      end
     end
 
-    it 'change answer attributes' do
-      patch :update, params: { question_id: question, id: users_answer,
-        answer: { body: 'new_body' } }, format: :js
-      users_answer.reload
-      expect(users_answer.body).to eq 'new_body'
-    end
-
-    it 'renders update template' do
-      patch :update, params: { question_id: question, id: users_answer,
-        answer: attributes_for(:answer) }, format: :js
-      expect(response).to render_template :update
+    context 'anothier user tries to update answer that does not belongs to him' do
+      it 'does not change answer attributes' do
+        answer_body = answer.body
+        patch :update, params: { question_id: question, id: answer,
+          answer: { body: 'new_body' } }, format: :js
+        answer.reload
+        expect(answer.body).to eq answer_body
+      end
     end
   end
 end
