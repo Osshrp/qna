@@ -9,15 +9,11 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     @answer.save
-    #   # redirect_to @answer.question, notice: 'Your answer was successfully created'
-    # else
-    #   render 'questions/show'
-    # end
   end
 
   def update
     @answer = Answer.find(params[:id])
-    @answer.update(answer_params)
+    @answer.update(answer_params) if current_user.author_of?(@answer)
   end
 
   def destroy
