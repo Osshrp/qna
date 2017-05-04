@@ -6,9 +6,10 @@ div id="answer-#{answer.id}"
     = answer.body
   - if current_user && current_user.author_of?(answer)
     .delete-edit-answer
-      = link_to 'The best'
+      = link_to 'The best', best_answer_path(answer), method: :post,
+        class: 'best-answer-link'
       '
-      = link_to 'Delete answer', answer,remote: true, method: :delete, class: 'delete-answer-link',
+      = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',
         data: { answer_id: answer.id }
       '
       = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }

@@ -122,11 +122,45 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #set_best' do
     sign_in_user
-    let!(:users_answer) { create(:answer, user: @user, question_id: question.id) }
-    context 'author tries to set best flag to answer' do
+
+    context 'author of question tries to set best flag to answer' do
+      let!(:users_question) { create(:question_with_answers, user: @user) }
       it 'set best flag to answer' do
-        post :set_best, params: { question_id: question, answer_id: users_answer }, format: :js
+        post :set_best, params: { answer_id: users_question.answers.first }, format: :js
         expect(assigns(:answer).best).to eq true
+      end
+
+      it 'set best flag to answer without js' do
+        post :set_best, params: { answer_id: users_question.answers.first }
+        expect(assigns(:answer).best).to eq true
+      end
+    end
+
+    context 'another user tries to set best flag to answer' do
+      let(:question) { create(:question_with_answers) }
+      it 'should not set best flag to answer' do
+        post :set_best, params: { answer_id: question.answers.first }, format: :js
+        expect(assigns(:answer).best).to eq false
+      end
+
+      it 'should not set best flag to answer without js' do
+        post :set_best, params: { answer_id: question.answers.first }
+        expect(assigns(:answer).best).to eq false
+      end
+    end
+
+    context 'unauthenticated user tries to set best flag to answer' do
+      let(:question) { create(:question_with_answers) }
+      it 'should not set best flag to answer' do
+        sign_out(@user)
+        post :set_best, params: { answer_id: question.answers.first }, format: :js
+        expect(question.answers.first.best).to eq false
+      end
+
+      it 'should not set best flag to answer without js' do
+        sign_out(@user)
+        post :set_best, params: { answer_id: question.answers.first }
+        expect(question.answers.first.best).to eq false
       end
     end
   end

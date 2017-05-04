@@ -7,5 +7,5 @@ Rails.application.routes.draw do
     resources :answers, shallow: true
   end
 
-  post 'questions/:id/set_best/:answer_id', to: 'answers#set_best', as: :best_answer
+  post 'answers/set_best/:answer_id', to: 'answers#set_best', as: :best_answer
 end
