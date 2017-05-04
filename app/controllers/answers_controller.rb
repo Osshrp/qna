@@ -28,6 +28,9 @@ class AnswersController < ApplicationController
     end
   end
 
+  def set_best
+  end
+
   private
 
   def answer_params
