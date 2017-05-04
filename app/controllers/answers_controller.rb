@@ -19,7 +19,10 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted'
+      respond_to do |format|
+        format.html { redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted' }
+        format.js
+      end
     else
       redirect_to questions_path, notice: 'You do not have permission to delete this answer'
     end
