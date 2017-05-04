@@ -109,13 +109,24 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'anothier user tries to update answer that does not belongs to him' do
+    context 'another user tries to update answer that does not belongs to him' do
       it 'does not change answer attributes' do
         answer_body = answer.body
         patch :update, params: { question_id: question, id: answer,
           answer: { body: 'new_body' } }, format: :js
         answer.reload
         expect(answer.body).to eq answer_body
+      end
+    end
+  end
+
+  describe 'POST #set_best' do
+    sign_in_user
+    let!(:users_answer) { create(:answer, user: @user, question_id: question.id) }
+    context 'author tries to set best flag to answer' do
+      it 'set best flag to answer' do
+        post :set_best, params: { question_id: question, answer_id: users_answer }, format: :js
+        expect(assigns(:answer).best).to eq true
       end
     end
   end
