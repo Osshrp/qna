@@ -1,7 +1,13 @@
 div id="answer-#{answer.id}"
-  li.list-group-item = answer.body
+
+  li.list-group-item
+    - if answer.best
+      span.badge The best answer
+    = answer.body
   - if current_user && current_user.author_of?(answer)
     .delete-edit-answer
+      = link_to 'The best'
+      '
       = link_to 'Delete answer', answer,remote: true, method: :delete, class: 'delete-answer-link',
         data: { answer_id: answer.id }
       '
