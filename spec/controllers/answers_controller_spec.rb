@@ -50,14 +50,24 @@ RSpec.describe AnswersController, type: :controller do
     before { answer }
 
     context 'author tries to delete answer' do
-      it 'deletes answer' do
+      it 'deletes answer with js' do
+        expect { delete :destroy, params: { id: users_answer }, format: :js }
+          .to change(Answer, :count).by(-1)
+      end
+
+      it 'deletes answer without js' do
         expect { delete :destroy, params: { id: users_answer } }
           .to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to question show view' do
+      it 'redirects to question show view when delete without js' do
         delete :destroy, params: { id: users_answer }
         expect(response).to redirect_to question_path(users_answer.question)
+      end
+
+      it 'renders question destroy view when delete with js' do
+        delete :destroy, params: { id: users_answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
