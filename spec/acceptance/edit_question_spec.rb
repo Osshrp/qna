@@ -8,7 +8,6 @@ feature 'Question editing', %q{
 
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
-  # given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'Unuthenticated user tries to edit question' do
     visit question_path(question)
@@ -37,6 +36,7 @@ feature 'Question editing', %q{
         expect(page).to have_content 'edited question body'
         expect(page).to_not have_selector 'text_field'
         expect(page).to_not have_selector 'textarea'
+        expect(page).to have_link 'Edit question'
       end
       within '.panel-heading' do
         expect(page).to_not have_content question.title

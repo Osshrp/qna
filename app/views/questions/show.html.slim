@@ -19,7 +19,7 @@
               = f.label :body, 'Question body'
               = f.text_area :body, class: 'form-control'
             .form-group
-              = f.submit 'Save question', class: 'btn btn-primary'
+              = f.submit 'Save question', class: 'btn btn-primary', id: 'question-update-submit'
     h4 Answers
     .answers
       = render @question.answers

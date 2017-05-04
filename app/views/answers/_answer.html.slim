@@ -6,6 +6,8 @@ div id="answer-#{answer.id}"
       '
       = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
       = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-        = f.label :body, 'Answer'
-        = f.text_area :body
-        = f.submit 'Save'
+        .form-group
+          = f.label :body, 'Answer'
+          = f.text_area :body, class: 'form-control'
+        .form-group
+          = f.submit 'Save', class: 'btn btn-primary'
