@@ -20,7 +20,8 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
       @answer.destroy
       respond_to do |format|
-        format.html { redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted' }
+        format.html { redirect_to question_path(@answer.question),
+          notice: 'Your answer successfully deleted' }
         format.js
       end
     else
@@ -29,6 +30,22 @@ class AnswersController < ApplicationController
   end
 
   def set_best
+    @answer = Answer.find(params[:answer_id])
+    if current_user.author_of?(@answer.question)
+      @answer.set_best
+      respond_to do |format|
+        format.html { redirect_to question_path(@answer.question),
+          notice: 'Your answer successfully set best' }
+        format.js
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to question_path(@answer.question),
+          notice: 'You do not have permission to rate this answer' }
+        format.js
+      end
+    end
+
   end
 
   private
