@@ -4,18 +4,20 @@ div id="answer-#{answer.id}"
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
-  - if current_user && current_user.author_of?(answer)
+
     .delete-edit-answer
-      = link_to 'The best', best_answer_path(answer), remote: true, method: :post,
-        class: 'best-answer-link'
+      - if current_user && current_user.author_of?(answer.question)
+        = link_to 'The best', set_best_answer_path(answer), remote: true, method: :patch,
+          class: 'best-answer-link'
       '
-      = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',
-        data: { answer_id: answer.id }
-      '
-      = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
-      = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-        .form-group
-          = f.label :body, 'Answer'
-          = f.text_area :body, class: 'form-control'
-        .form-group
-          = f.submit 'Save', class: 'btn btn-primary'
+      - if current_user && current_user.author_of?(answer)
+        = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',
+          data: { answer_id: answer.id }
+        '
+        = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+        = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+          .form-group
+            = f.label :body, 'Answer'
+            = f.text_area :body, class: 'form-control'
+          .form-group
+            = f.submit 'Save', class: 'btn btn-primary'
