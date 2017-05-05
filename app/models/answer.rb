@@ -5,15 +5,9 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   def set_best
-    clear_best
-    update(best: true)
-  end
-
-  private
-
-  def clear_best
     question.answers.where(best: true).each do |answer|
       answer.update(best: false)
     end
+    update(best: true)
   end
 end

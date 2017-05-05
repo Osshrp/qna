@@ -126,13 +126,13 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'POST #set_best' do
+  describe 'PATCH #set_best' do
     sign_in_user
 
     context 'author of question tries to set best flag to answer' do
       let!(:users_question) { create(:question_with_answers, user: @user) }
       it 'set best flag to answer' do
-        post :set_best, params: { answer_id: users_question.answers.first }, format: :js
+        patch :set_best, params: { id: users_question.answers.first }, format: :js
         expect(assigns(:answer).best).to eq true
       end
     end
@@ -140,7 +140,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'another user tries to set best flag to answer' do
       let(:question) { create(:question_with_answers) }
       before do
-        post :set_best, params: { answer_id: question.answers.first }, format: :js
+        patch :set_best, params: { id: question.answers.first }, format: :js
       end
       it 'should not set best flag to answer' do
         expect(assigns(:answer).best).to eq false
@@ -158,7 +158,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'unauthenticated user tries to set best flag to answer' do
       let(:question) { create(:question_with_answers) }
       before do
-        post :set_best, params: { answer_id: question.answers.first }, format: :js
+        patch :set_best, params: { id: question.answers.first }, format: :js
       end
       it 'should not set best flag to answer' do
         sign_out(@user)
