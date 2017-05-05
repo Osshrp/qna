@@ -22,7 +22,8 @@
               = f.submit 'Save question', class: 'btn btn-primary', id: 'question-update-submit'
     h4 Answers
     .answers
-      = render @question.answers
+      ul.answers-list
+        = render @question.answers
     - if user_signed_in?
       = form_for [@question, @answer], remote: true do |f|
         .answer-errors

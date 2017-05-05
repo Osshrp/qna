@@ -1,1 +1,2 @@
-$('.answers').html('<%= j render @answer.question.answers %>');
+$('.answers-list').html('<%= j render @answer.question.answers %>')
+$('.best-answer-bage').closest('div').prependTo('.answers-list')
