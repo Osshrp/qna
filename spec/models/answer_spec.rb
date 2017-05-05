@@ -7,12 +7,21 @@ RSpec.describe Answer, type: :model do
   it { should have_db_index(:question_id) }
 
   let(:question) { create(:question_with_answers) }
-  describe '#best' do
-    it 'should set best answer' do
-      answer = question.answers.first
+  let(:answer) { question.answers.first }
+  let(:new_best_answer) { question.answers.last }
+  describe '#set_best' do
+    before do
       answer.set_best
+    end
+    it 'should set best answer' do
       answer.reload
       expect(answer.best).to be_truthy
+    end
+
+    it 'should remove best mark from old best answer' do
+      new_best_answer.set_best
+      answer.reload
+      expect(answer.best).to be_falsey
     end
   end
 end
