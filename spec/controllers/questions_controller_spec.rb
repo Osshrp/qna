@@ -128,7 +128,11 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to index view' do
-        expect(response).to render_template :update
+        expect(response).to redirect_to questions_path
+      end
+
+      it 'shows flash message' do
+        expect(flash[:alert]).to eq('You do not have permission to update this question')
       end
     end
   end

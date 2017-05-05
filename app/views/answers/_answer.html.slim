@@ -2,11 +2,11 @@ div id="answer-#{answer.id}"
 
   li.list-group-item
     - if answer.best
-      span.badge The best answer
+      span.badge.best-answer-bage The best answer
     = answer.body
   - if current_user && current_user.author_of?(answer)
     .delete-edit-answer
-      = link_to 'The best', best_answer_path(answer), method: :post,
+      = link_to 'The best', best_answer_path(answer), remote: true, method: :post,
         class: 'best-answer-link'
       '
       = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',

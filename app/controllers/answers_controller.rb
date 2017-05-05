@@ -13,19 +13,20 @@ class AnswersController < ApplicationController
 
   def update
     @answer = Answer.find(params[:id])
-    @answer.update(answer_params) if current_user.author_of?(@answer)
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+    else
+      redirect_to question_path(@answer.question),
+        alert: 'You do not have permission to update this answer'
+    end
   end
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      respond_to do |format|
-        format.html { redirect_to question_path(@answer.question),
-          notice: 'Your answer successfully deleted' }
-        format.js
-      end
     else
-      redirect_to questions_path, notice: 'You do not have permission to delete this answer'
+      redirect_to question_path(@answer.question),
+        alert: 'You do not have permission to delete this answer'
     end
   end
 
@@ -33,19 +34,10 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:answer_id])
     if current_user.author_of?(@answer.question)
       @answer.set_best
-      respond_to do |format|
-        format.html { redirect_to question_path(@answer.question),
-          notice: 'Your answer successfully set best' }
-        format.js
-      end
     else
-      respond_to do |format|
-        format.html { redirect_to question_path(@answer.question),
-          notice: 'You do not have permission to rate this answer' }
-        format.js
-      end
+      redirect_to question_path(@answer.question),
+        alert: 'You do not have permission to rate this answer'
     end
-
   end
 
   private

@@ -55,16 +55,6 @@ RSpec.describe AnswersController, type: :controller do
           .to change(Answer, :count).by(-1)
       end
 
-      it 'deletes answer without js' do
-        expect { delete :destroy, params: { id: users_answer } }
-          .to change(Answer, :count).by(-1)
-      end
-
-      it 'redirects to question show view when delete without js' do
-        delete :destroy, params: { id: users_answer }
-        expect(response).to redirect_to question_path(users_answer.question)
-      end
-
       it 'renders question destroy view when delete with js' do
         delete :destroy, params: { id: users_answer }, format: :js
         expect(response).to render_template :destroy
@@ -79,7 +69,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to questions index view' do
         delete :destroy, params: { id: answer }
-        expect(response).to redirect_to questions_path
+        expect(response).to redirect_to question_path(answer.question)
+      end
+
+      it 'shows flash message' do
+        delete :destroy, params: { id: answer }
+        expect(flash[:alert]).to eq('You do not have permission to delete this answer')
       end
     end
   end
@@ -110,12 +105,23 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'another user tries to update answer that does not belongs to him' do
-      it 'does not change answer attributes' do
-        answer_body = answer.body
+      before do
         patch :update, params: { question_id: question, id: answer,
           answer: { body: 'new_body' } }, format: :js
+      end
+      it 'does not change answer attributes' do
+        answer_body = answer.body
         answer.reload
+
         expect(answer.body).to eq answer_body
+      end
+
+      it 'redirects to question show view' do
+        expect(response).to redirect_to question_path(question)
+      end
+
+      it 'shows flash message' do
+        expect(flash[:alert]).to eq('You do not have permission to update this answer')
       end
     end
   end
@@ -129,38 +135,42 @@ RSpec.describe AnswersController, type: :controller do
         post :set_best, params: { answer_id: users_question.answers.first }, format: :js
         expect(assigns(:answer).best).to eq true
       end
-
-      it 'set best flag to answer without js' do
-        post :set_best, params: { answer_id: users_question.answers.first }
-        expect(assigns(:answer).best).to eq true
-      end
     end
 
     context 'another user tries to set best flag to answer' do
       let(:question) { create(:question_with_answers) }
-      it 'should not set best flag to answer' do
+      before do
         post :set_best, params: { answer_id: question.answers.first }, format: :js
+      end
+      it 'should not set best flag to answer' do
         expect(assigns(:answer).best).to eq false
       end
 
-      it 'should not set best flag to answer without js' do
-        post :set_best, params: { answer_id: question.answers.first }
-        expect(assigns(:answer).best).to eq false
+      it 'redirects to question show view' do
+        expect(response).to redirect_to question_path(question)
+      end
+
+      it 'shows flash message' do
+        expect(flash[:alert]).to eq('You do not have permission to rate this answer')
       end
     end
 
     context 'unauthenticated user tries to set best flag to answer' do
       let(:question) { create(:question_with_answers) }
+      before do
+        post :set_best, params: { answer_id: question.answers.first }, format: :js
+      end
       it 'should not set best flag to answer' do
         sign_out(@user)
-        post :set_best, params: { answer_id: question.answers.first }, format: :js
         expect(question.answers.first.best).to eq false
       end
 
-      it 'should not set best flag to answer without js' do
-        sign_out(@user)
-        post :set_best, params: { answer_id: question.answers.first }
-        expect(question.answers.first.best).to eq false
+      it 'redirects to question show view' do
+        expect(response).to redirect_to question_path(question)
+      end
+
+      it 'shows flash message' do
+        expect(flash[:alert]).to eq('You do not have permission to rate this answer')
       end
     end
   end
