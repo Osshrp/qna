@@ -3,11 +3,5 @@
     $('.answer-errors').html('<%= j message %>')
   <% end %>
 <% else %>
-  $('div#answer-<%= j @answer.id.to_s %>').html('<%= j render @answer %>');
-  $('.edit-answer-link').click(function(e) {
-    e.preventDefault();
-    $(this).hide();
-    answer_id = $(this).data('answerId');
-    $('form#edit-answer-' + answer_id).show();
-  });
+  $('div#answer-<%= @answer.id %>').html('<%= j render @answer %>');
 <% end %>
