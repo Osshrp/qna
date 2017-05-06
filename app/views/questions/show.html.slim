@@ -20,6 +20,11 @@
               = f.text_area :body, class: 'form-control'
             .form-group
               = f.submit 'Save question', class: 'btn btn-primary', id: 'question-update-submit'
+      .question-attachments
+        p Attachments:
+        ul
+        - @question.attachments.each do |a|
+          li = a.file.file.filename
     h4 Answers
     .answers
       ul.answers-list
