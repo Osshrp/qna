@@ -5,10 +5,4 @@
 <% else %>
   $('div.panel-heading').html('<%= j @question.title %>');
   $('div.question-body').html('<%= j @question.body %>')
-  $('.edit-question-link').click(function(e) {
-    e.preventDefault();
-    $(this).hide();
-    // answer_id = $(this).data('answerId');
-    $('form#edit-question').show();
-  });
 <% end %>
