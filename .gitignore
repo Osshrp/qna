@@ -18,3 +18,5 @@
 
 config/database.yml
 .ruby-gemset
+
+/public/uploads

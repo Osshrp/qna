@@ -1,6 +1,6 @@
 class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
-  has_many :attachments, dependent: :destroy
+  has_many :attachments, dependent: :destroy, as: :attachmentable
   belongs_to :user
 
   validates :title, :body, presence: true
