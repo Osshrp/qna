@@ -13,8 +13,8 @@ feature 'Add files to answer', %q{
     sign_in(user)
     visit question_path(question)
   end
-  scenario 'User adds file when answers' do
-    fill_in 'Your answer', with: 'Answer body'
+  scenario 'User adds file when answers', js: true do
+    fill_in 'Answer', with: 'Answer body'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_on 'Create'
 
