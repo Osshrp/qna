@@ -4,10 +4,7 @@ div id="answer-#{answer.id}"
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
-    p Attachments:
-    ul
-      - answer.attachments.each do |a|
-        li = link_to a.file.identifier, a.file.url
+    = render 'common/attachments', resource: answer
 
     .delete-edit-answer
       - if current_user && current_user.author_of?(answer.question)
@@ -23,5 +20,7 @@ div id="answer-#{answer.id}"
           .form-group
             = f.label :body, 'Answer'
             = f.text_area :body, class: 'form-control'
+          .form-group
+            = render 'common/form_attachment', f: f
           .form-group
             = f.submit 'Save', class: 'btn btn-primary'
