@@ -5,7 +5,7 @@
     .question
       .question-body
         = @question.body
-      .question-attachments
+      ul.question-attachments
         = render 'common/attachments', resource: @question
       - if current_user && current_user.author_of?(@question)
         .edit-delete
@@ -21,7 +21,7 @@
               = f.label :body, 'Question body'
               = f.text_area :body, class: 'form-control'
             .form-group
-              = render 'common/form_attachment', f: f
+              = render 'common/attachment_fields', f: f
             .form-group
               = f.submit 'Save question', class: 'btn btn-primary', id: 'question-update-submit'
 
@@ -36,9 +36,6 @@
           = f.label :body, 'Answer'
           = f.text_area :body, class: 'form-control'
         .form-group
-          = render 'common/form_attachment', f: f
-          / = f.fields_for :attachments do |a|
-          /   = a.label :file
-          /   = a.file_field :file
+          = render 'common/attachment_fields', f: f
         .form-group
           = f.submit 'Create answer', class: 'btn btn-primary'
