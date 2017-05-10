@@ -4,7 +4,8 @@ div id="answer-#{answer.id}"
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
-    = render 'common/attachments', resource: answer
+    ul.answer-attachments
+      = render 'common/attachments', resource: answer
 
     .delete-edit-answer
       - if current_user && current_user.author_of?(answer.question)
