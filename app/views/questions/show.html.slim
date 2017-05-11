@@ -21,7 +21,10 @@
               = f.label :body, 'Question body'
               = f.text_area :body, class: 'form-control'
             .form-group
-              = render 'common/attachment_fields', f: f
+              = f.fields_for :attachments do |a|
+                = render 'common/attachment_fields', f: a
+              .links
+                = link_to_add_association 'add file', f, :attachments, partial: 'common/attachment_fields'
             .form-group
               = f.submit 'Save question', class: 'btn btn-primary', id: 'question-update-submit'
 
@@ -36,6 +39,9 @@
           = f.label :body, 'Answer'
           = f.text_area :body, class: 'form-control'
         .form-group
-          = render 'common/attachment_fields', f: f
+        = f.fields_for :attachments do |a|
+          = render 'common/attachment_fields', f: a
+          .links
+            = link_to_add_association 'add file', f, :attachments, partial: 'common/attachment_fields'
         .form-group
           = f.submit 'Create answer', class: 'btn btn-primary'
