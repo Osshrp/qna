@@ -7,6 +7,7 @@ feature 'Question editing', %q{
 } do
 
   given(:user) { create(:user) }
+  given(:another_user) { create(:user) }
   given!(:question) { create(:question, user: user) }
 
   scenario 'Unuthenticated user tries to edit question' do
@@ -43,7 +44,7 @@ feature 'Question editing', %q{
         expect(page).to have_content 'edited question title'
       end
     end
-    let(:another_user) { create(:user) }
+
     scenario "tries to edit other user's question", js: true do
       click_on 'Sign out'
       sign_in(another_user)

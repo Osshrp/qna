@@ -7,27 +7,41 @@ feature 'Add files to question', %q{
 } do
 
   given(:user) { create(:user) }
+  given(:another_user) { create(:user) }
+  given(:question) { create(:question, user: user) }
 
-  describe 'User tries to add file to question' do
+  describe 'User tries to add file to question', js: true do
     background do
       sign_in(user)
       visit new_question_path
-    end
-    scenario 'Author adds file when asks question' do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Question body'
-      attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
+      click_on 'add file'
+      inputs = all('input[type="file"]')
+      inputs[0].set("#{Rails.root}/spec/spec_helper.rb")
+      inputs[1].set("#{Rails.root}/spec/rails_helper.rb")
       click_on 'Create'
-
+    end
+    scenario 'Author adds file when asks question' do
       expect(page).to have_link 'spec_helper.rb',
         href: '/uploads/attachment/file/1/spec_helper.rb'
+      expect(page).to have_link 'rails_helper.rb',
+        href: '/uploads/attachment/file/2/rails_helper.rb'
     end
-
-    given(:question) { create(:question, user: user) }
 
     scenario 'Another user tries to add file to question' do
       click_on 'Sign out'
-      visit question_path(question)
+      sign_in(another_user)
+      visit question_path(Question.last)
+
+      within '.question' do
+        expect(page).to have_no_selector('input')
+      end
+    end
+
+    scenario 'Unauthenticated user tries to add file to question' do
+      click_on 'Sign out'
+      visit question_path(Question.last)
 
       within '.question' do
         expect(page).to have_no_selector('input')
