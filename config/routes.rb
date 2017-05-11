@@ -8,5 +8,6 @@ Rails.application.routes.draw do
       patch :set_best, on: :member
     end
   end
-  # post 'answers/set_best/:answer_id', to: 'answers#set_best', as: :best_answer
+
+  resources :attachments, only: [:destroy]
 end
