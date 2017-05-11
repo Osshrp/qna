@@ -7,15 +7,14 @@ feature 'Deletes files from question', %q{
 } do
 
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
+  given(:file) { File.open("#{Rails.root}/spec/spec_helper.rb") }
+  given(:question) { create(:question, user: user) }
+  given(:another_question) { create(:question) }
 
   describe 'User tries to delete file from question', js: true do
     background do
       sign_in(user)
-      visit question_path(question)
-
-      attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
-      click_on 'Create'
+      question.attachments.create(file: file)
     end
     scenario 'Author deletes file from question' do
       visit question_path(question)
@@ -23,6 +22,13 @@ feature 'Deletes files from question', %q{
         click_on 'delete file'
 
         expect(page).to have_no_link 'spec_helper.rb'
+      end
+    end
+
+    scenario 'User tries to delete file from question that does not belong to him' do
+      visit question_path(another_question)
+      within '.question-attachments' do
+        expect(page).to have_no_link 'delete file'
       end
     end
   end
