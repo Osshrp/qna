@@ -19,4 +19,4 @@
 config/database.yml
 .ruby-gemset
 
-/public/uploads
+/public/uploads/*
