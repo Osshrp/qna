@@ -1,5 +1,5 @@
 class Answer < ApplicationRecord
-  has_many :attachments, as: :attachmentable, dependent: :destroy
+  has_many :attachments, as: :attachable, dependent: :destroy
   belongs_to :question
   belongs_to :user
 
