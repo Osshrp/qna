@@ -25,7 +25,7 @@ module Votable
     if voted_by?(user)
       vote = votes.where(user: user).first
       vote.is_liked ? self.rating -= 1 : self.rating += 1
-      vote.update(is_liked: nil)
+      vote.destroy
     end
   end
 

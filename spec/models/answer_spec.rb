@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'concerns/votable_spec.rb'
 
 RSpec.describe Answer, type: :model do
   it { should belong_to(:question) }
@@ -10,6 +11,9 @@ RSpec.describe Answer, type: :model do
   let(:question) { create(:question_with_answers) }
   let(:answer) { question.answers.first }
   let(:new_best_answer) { question.answers.last }
+
+  it_behaves_like 'votable'
+
   describe '#set_best' do
     before do
       answer.set_best
