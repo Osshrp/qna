@@ -7,21 +7,31 @@ module Votable
 
   end
 
-  def liked_by(user)
-    vote.update(is_liked: true) if vote.is_liked.blank?
+  def like_by(user)
+    unless voted_by?(user)
+      votes.create(is_liked: true, user: user)
+      self.rating += 1
+    end
   end
 
-  def disliked_by(user)
-    vote.update(is_liked: false) if vote.is_liked.blank?
+  def dislike_by(user)
+    unless voted_by?(user)
+      votes.create(is_liked: false, user: user)
+      self.rating -= 1
+    end
   end
 
   def clear_vote_by(user)
-    vote.update(is_liked: nil) if vote.is_liked.present?
+    if voted_by?(user)
+      vote = votes.where(user: user).first
+      vote.is_liked ? self.rating -= 1 : self.rating += 1
+      vote.update(is_liked: nil)
+    end
   end
 
   private
 
-  def vote
-    votes.where(user: user).first
+  def voted_by?(user)
+    user.votes.exists?(votable_id: id, votable_type: self.class.name)
   end
 end
