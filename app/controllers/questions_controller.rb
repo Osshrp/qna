@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_question, only: [:show, :update, :destroy]
+  before_action :set_question, only: [:show, :update, :destroy, :set_like]
 
   def index
     @questions = Question.all
@@ -41,6 +41,15 @@ class QuestionsController < ApplicationController
     else
       redirect_to questions_path,
         notice: 'You do not have permission to delete this question'
+    end
+  end
+
+  def set_like
+    unless current_user.author_of?(@question)
+      @question.like_by(current_user)
+    else
+      redirect_to questions_path,
+        notice: 'You do not have permission to rate this question'
     end
   end
 
