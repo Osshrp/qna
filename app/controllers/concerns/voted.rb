@@ -2,10 +2,10 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_votable, only: :set_vote
+    before_action :set_votable, only: :vote
   end
 
-  def set_vote
+  def vote
     unless current_user.author_of?(@votable)
       @votable.send("#{params[:vote]}_by", current_user)
     else
