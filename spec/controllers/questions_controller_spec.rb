@@ -181,23 +181,23 @@ RSpec.describe QuestionsController, type: :controller do
     let(:users_question) { create(:question, user: @user) }
     context 'user tries to like question' do
       it 'set like to question' do
-        expect { patch :set_vote, params: { id: question, vote: :like },
+        expect { patch :vote, params: { id: question, vote: :like },
           format: :js }.to change(Vote, :count).by(1)
       end
     end
 
     context 'user tries to like question once more time' do
       it 'set like to question' do
-        patch :set_vote, params: { id: question, vote: :like,
+        patch :vote, params: { id: question, vote: :like,
           question: { is_liked: true } }, format: :js
-        expect { patch :set_vote, params: { id: question, vote: :like,
+        expect { patch :vote, params: { id: question, vote: :like,
           question: { is_liked: true } }, format: :js }.to_not change(Vote, :count)
       end
     end
 
     context 'author tries to like his question' do
       it 'does not set like to question' do
-        expect { patch :set_vote, params: { id: users_question, vote: :like,
+        expect { patch :vote, params: { id: users_question, vote: :like,
           question: { is_liked: true } }, format: :js }.to_not change(Vote, :count)
       end
     end
