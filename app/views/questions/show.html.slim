@@ -5,6 +5,11 @@
     .question
       .question-body
         = @question.body
+        .vote
+          - if current_user && !current_user.author_of?(@question)
+            = link_to 'Like it', set_vote_question_path(@question)
+            '
+            = link_to 'Disike it', set_vote_question_path(@question)
       ul.question-attachments
         = render 'common/attachments', resource: @question
       - if current_user && current_user.author_of?(@question)

@@ -181,8 +181,8 @@ RSpec.describe QuestionsController, type: :controller do
     let(:users_question) { create(:question, user: @user) }
     context 'user tries to like question' do
       it 'set like to question' do
-        expect { patch :set_vote, params: { id: question, vote: :like,
-          question: { is_liked: true } }, format: :js }.to change(Vote, :count).by(1)
+        expect { patch :set_vote, params: { id: question, vote: :like },
+          format: :js }.to change(Vote, :count).by(1)
       end
     end
 
