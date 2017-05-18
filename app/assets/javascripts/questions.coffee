@@ -11,3 +11,7 @@ $(document).on('click', '#question-update-submit', (e) ->
   $('form#edit-question').hide();
   $('.edit-question-link').show();
 )
+
+$(document).bind 'ajax:success', (e, data, status, xhr) ->
+  console.log("data: " + data)
+  $('.question-body').html(xhr.responseText)

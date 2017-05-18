@@ -9,11 +9,12 @@ feature 'Vote for question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question) }
 
-  scenario 'authenticated user votes for question' do
+  scenario 'authenticated user votes for question', js: true do
     sign_in(user)
     visit question_path(question)
     within '.vote' do
-      click_on 'Like'
+      choose 'Like'
+      click_on 'Vote'
       expect(page).to have_content 'You like it'
       expect(page).to have_content 'Recall vote'
     end

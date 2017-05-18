@@ -4,28 +4,32 @@
   .panel-body
     .question
       .question-body
-        = @question.body
-        - if current_user && !current_user.author_of?(@question)
-          - if @vote.is_liked
-            span.badge.like-bage You like it
-          - else
-            span.badge.dislike-bage You dislike it
-        .vote
+        = render @question, vote: @vote
+        / = @question.body
+        / - if current_user && !current_user.author_of?(@question)
+        /   - if @vote
+        /     - if @vote.is_liked
+        /       span.badge.pull-right.like-bage You like it
+        /     - else
+        /       span.badge.pull-right.dislike-bage You dislike it
+        / .vote
           - if current_user && !current_user.author_of?(@question)
-            - if @vote.is_liked
-              p You like it
+            - if !@vote
+              = form_tag vote_question_path(@question), remote: true, method: :patch
+                .form-group
+                  .radio-inline
+                    = radio_button_tag(:vote, 'like', class: 'form-control')
+                    = label_tag(:vote_like, 'Like')
+                  .radio-inline
+                    = radio_button_tag(:vote, 'dislike')
+                    = label_tag(:vote_dislike, 'Dislike')
+                .form-group
+                  = submit_tag 'Vote', class: 'btn btn-primary', id: 'question-vote-submit'
             - else
-              p You dislike it
-            = form_tag vote_question_path(@question), remote: true, method: :patch
-              .form-group
-                .radio-inline
-                  = radio_button_tag(:vote, 'like', class: 'form-control')
-                  = label_tag(:vote_like, 'Like')
-                .radio-inline
-                  = radio_button_tag(:vote, 'dislike')
-                  = label_tag(:vote_dislike, 'Dislike')
-              .form-group
-                = submit_tag 'Vote', class: 'btn btn-primary', id: 'question-vote-submit'
+              = form_tag vote_question_path(@question), remote: true, method: :patch
+                .form-group
+                  = hidden_field_tag :vote, 'clear_vote'
+                  = submit_tag 'Recall vote', class: 'btn btn-primary', id: 'question-vote-submit'
 
       ul.question-attachments
         = render 'common/attachments', resource: @question
