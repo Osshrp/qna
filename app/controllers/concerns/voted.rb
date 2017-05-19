@@ -10,7 +10,6 @@ module Voted
       unless current_user.author_of?(@votable)
         @votable.send("#{params[:vote]}_by", current_user)
         @vote = @votable.votes.where(user: current_user).first
-        # format.html { render @votable, locals: { vote: @vote } }
         format.json { render json: { rating: @votable.rating, vote: @vote } }
       else
         format.html { redirect_to polymorphic_path(controller_name),

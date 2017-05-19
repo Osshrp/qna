@@ -8,7 +8,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @vote = @question.votes.where(user: current_user).first
+    @question_vote = @question.votes.where(user: current_user).first
     @answer = Answer.new
     @answer.attachments.build
   end
@@ -45,15 +45,6 @@ class QuestionsController < ApplicationController
         notice: 'You do not have permission to delete this question'
     end
   end
-
-  # def set_like
-  #   unless current_user.author_of?(@question)
-  #     @question.like_by(current_user)
-  #   else
-  #     redirect_to questions_path,
-  #       notice: 'You do not have permission to rate this question'
-  #   end
-  # end
 
   private
 
