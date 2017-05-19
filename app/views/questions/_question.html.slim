@@ -1,7 +1,8 @@
 = question.body
 - if current_user && !current_user.author_of?(question)
-  span.pull-right.like-badge
-    - if vote
-      | You've #{vote.value}d it
+<span class = "pull-right like-badge", id = "vote-question-#{question.id}">
+  - if vote
+    | You've #{vote.value}d it
+</span>
 .vote
   = render 'common/vote', resource: question, vote: vote

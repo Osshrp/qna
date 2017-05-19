@@ -35,7 +35,7 @@ feature 'Add files to question', %q{
       visit question_path(Question.last)
 
       within '.question' do
-        expect(page).to have_no_selector('input')
+        expect(page).to have_no_selector('input[type="file"]')
       end
     end
 
@@ -44,7 +44,7 @@ feature 'Add files to question', %q{
       visit question_path(Question.last)
 
       within '.question' do
-        expect(page).to have_no_selector('input')
+        expect(page).to have_no_selector('input[type="file"]')
       end
     end
   end
