@@ -16,7 +16,7 @@ feature 'Vote for question', %q{
     within '.question' do
       choose 'Like'
       click_on 'Vote'
-      expect(page).to have_content "You've like it"
+      expect(page).to have_content "You've liked it"
       expect(page).to have_button 'Recall vote'
     end
   end
@@ -27,7 +27,7 @@ feature 'Vote for question', %q{
     within '.question' do
       choose 'Dislike'
       click_on 'Vote'
-      expect(page).to have_content "You've dislike it"
+      expect(page).to have_content "You've disliked it"
       expect(page).to have_button 'Recall vote'
     end
   end

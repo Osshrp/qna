@@ -11,14 +11,3 @@ $(document).on('click', '#question-update-submit', (e) ->
   $('form#edit-question').hide();
   $('.edit-question-link').show();
 )
-
-$(document).bind 'ajax:success', (e, data, status, xhr) ->
-  question = $.parseJSON(xhr.responseText)
-  if question.vote == null
-    $('.like-badge').html('')
-    $('.vote-form').show()
-    $('.clear-vote-form').hide()
-  else
-    $('.like-badge').html("You've " + question.vote.value + " it")
-    $('.vote-form').hide()
-    $('.clear-vote-form').show()
