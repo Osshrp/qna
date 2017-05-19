@@ -8,20 +8,52 @@ feature 'Vote for question', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question) }
+  given(:users_question) { create(:question, user: user) }
 
-  scenario 'authenticated user votes for question', js: true do
+  scenario 'authenticated user set like to question', js: true do
     sign_in(user)
     visit question_path(question)
-    within '.vote' do
+    within '.question' do
       choose 'Like'
       click_on 'Vote'
-      expect(page).to have_content 'You like it'
-      expect(page).to have_content 'Recall vote'
+      expect(page).to have_content "You've like it"
+      expect(page).to have_button 'Recall vote'
     end
-
-
   end
-  scenario 'authenticated user tries to vote for question once more time'
-  scenario 'author tries to vote for his question'
-  scenario 'unauthenticated user rires to vote for question'
+
+  scenario 'authenticated user set dislike to question', js: true do
+    sign_in(user)
+    visit question_path(question)
+    within '.question' do
+      choose 'Dislike'
+      click_on 'Vote'
+      expect(page).to have_content "You've dislike it"
+      expect(page).to have_button 'Recall vote'
+    end
+  end
+
+  scenario 'authenticated user tries to vote for question once more time', js: true do
+    sign_in(user)
+    visit question_path(question)
+    within '.question' do
+      choose 'Like'
+      click_on 'Vote'
+      expect(page).to have_no_button 'Vote'
+    end
+  end
+
+  scenario 'author tries to vote for his question' do
+    sign_in(user)
+    visit question_path(users_question)
+    within '.question' do
+      expect(page).to have_no_button 'Vote'
+    end
+  end
+
+  scenario 'unauthenticated user tries to vote for question' do
+    visit question_path(question)
+    within '.question' do
+      expect(page).to have_no_button 'Vote'
+    end
+  end
 end

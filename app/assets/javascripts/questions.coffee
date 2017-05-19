@@ -13,5 +13,12 @@ $(document).on('click', '#question-update-submit', (e) ->
 )
 
 $(document).bind 'ajax:success', (e, data, status, xhr) ->
-  console.log("data: " + data)
-  $('.question-body').html(xhr.responseText)
+  question = $.parseJSON(xhr.responseText)
+  if question.vote == null
+    $('.like-badge').html('')
+    $('.vote-form').show()
+    $('.clear-vote-form').hide()
+  else
+    $('.like-badge').html("You've " + question.vote.value + " it")
+    $('.vote-form').hide()
+    $('.clear-vote-form').show()
