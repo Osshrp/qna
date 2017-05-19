@@ -4,20 +4,4 @@
     - if vote
       | You've #{vote.value}d it
 .vote
-  - if current_user && !current_user.author_of?(question)
-    = form_tag vote_question_path(question), { class: 'vote-form', remote: true,
-        method: :patch, style: "display: #{vote ? 'none' : 'block'}" }
-      .form-group
-        .radio-inline
-          = radio_button_tag(:vote, 'like', class: 'form-control')
-          = label_tag(:vote_like, 'Like')
-        .radio-inline
-          = radio_button_tag(:vote, 'dislike')
-          = label_tag(:vote_dislike, 'Dislike')
-      .form-group
-        = submit_tag 'Vote', class: 'btn btn-primary', id: 'question-vote-submit'
-    = form_tag vote_question_path(question), { class: 'clear-vote-form', remote: true,
-        method: :patch, style: "display: #{vote ? 'block' : 'none'}" }
-      .form-group
-        = hidden_field_tag :vote, 'clear_vote'
-        = submit_tag 'Recall vote', class: 'btn btn-primary', id: 'question-vote-submit'
+  = render 'common/vote', resource: question, vote: vote
