@@ -9,14 +9,14 @@ module Votable
 
   def like_by(user)
     unless voted_by?(user)
-      votes.create(is_liked: true, user: user)
+      votes.create(value: "like", user: user)
       self.rating += 1
     end
   end
 
   def dislike_by(user)
     unless voted_by?(user)
-      votes.create(is_liked: false, user: user)
+      votes.create(value: "dislike", user: user)
       self.rating -= 1
     end
   end
@@ -24,7 +24,7 @@ module Votable
   def clear_vote_by(user)
     if voted_by?(user)
       vote = votes.where(user: user).first
-      vote.is_liked ? self.rating -= 1 : self.rating += 1
+      vote.value == "like" ? self.rating -= 1 : self.rating += 1
       vote.destroy
     end
   end
