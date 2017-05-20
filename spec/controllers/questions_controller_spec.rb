@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'concerns/voted_spec.rb'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
@@ -175,31 +176,5 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'PATCH #set_vote' do
-    sign_in_user
-    let(:question) { create(:question) }
-    let(:users_question) { create(:question, user: @user) }
-    context 'user tries to like question' do
-      it 'set like to question' do
-        expect { patch :vote, params: { id: question, vote: :like },
-          format: :json }.to change(Vote, :count).by(1)
-      end
-    end
-
-    context 'user tries to like question once more time' do
-      it 'set like to question' do
-        patch :vote, params: { id: question, vote: :like,
-          question: { is_liked: true } }, format: :json
-        expect { patch :vote, params: { id: question, vote: :like },
-          format: :json }.to_not change(Vote, :count)
-      end
-    end
-
-    context 'author tries to like his question' do
-      it 'does not set like to question' do
-        expect { patch :vote, params: { id: users_question, vote: :like }}
-          .to_not change(Vote, :count)
-      end
-    end
-  end
+  it_behaves_like 'voted'
 end

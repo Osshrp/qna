@@ -14,7 +14,7 @@ module Voted
                                      votable: @votable,
                                      vote: @vote } }
       else
-        format.html { redirect_to polymorphic_path(controller_name),
+        format.html { redirect_to questions_path,
           notice: "You do not have permission to rate this #{controller_name.singularize}" }
       end
     end
