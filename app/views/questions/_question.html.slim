@@ -1,3 +1,6 @@
+<div id = "rate-question-#{question.id}">
+  = question.rating
+</div>
 = question.body
 - if current_user && !current_user.author_of?(question)
 <span class = "pull-right like-badge", id = "vote-question-#{question.id}">

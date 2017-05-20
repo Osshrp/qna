@@ -19,9 +19,13 @@ feature 'Cancel vote and re-vote for answer', %q{
       click_on 'Vote'
     end
   end
-  scenario 'authenticated user cnacel vote and re-vote for answer', js: true do
+  scenario 'authenticated user cnacel vote for answer', js: true do
     within '.answers' do
       click_on 'Recall vote'
+
+      within "#rate-answer-#{answer.id}" do
+        expect(page).to have_content "0"
+      end
       expect(page).to have_no_content "You've liked it"
       expect(page).to have_no_button 'Recall vote'
       expect(page).to have_button 'Vote'
