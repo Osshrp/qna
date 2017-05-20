@@ -11,6 +11,7 @@ module Votable
     unless voted_by?(user)
       votes.create(value: "like", user: user)
       self.rating += 1
+      self.save
     end
   end
 
@@ -18,6 +19,7 @@ module Votable
     unless voted_by?(user)
       votes.create(value: "dislike", user: user)
       self.rating -= 1
+      self.save
     end
   end
 
@@ -25,6 +27,7 @@ module Votable
     if voted_by?(user)
       vote = votes.where(user: user).first
       vote.value == "like" ? self.rating -= 1 : self.rating += 1
+      self.save
       vote.destroy
     end
   end

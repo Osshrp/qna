@@ -1,6 +1,9 @@
 div id="answer-#{answer.id}"
 
   li.list-group-item
+    <div id = "rate-answer-#{answer.id}">
+      = answer.rating
+    </div>
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
