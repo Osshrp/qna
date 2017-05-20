@@ -13,7 +13,8 @@
       = submit_tag 'Vote', class: 'btn btn-primary'
   = form_tag "/#{resource.class.name.pluralize.underscore}/#{resource.id}/vote",
     { class: 'clear-vote-form', id: "clear-vote-#{resource.class.name.underscore}-#{resource.id}",
-      remote: true, method: :patch, style: "display: #{vote ? 'block' : 'none'}" }
+      remote: true, method: :patch,
+        style: "display: #{(vote && current_user.author_of?(vote)) ? 'block' : 'none'}" }
     .form-group
       = hidden_field_tag :vote, 'clear_vote'
       = submit_tag 'Recall vote', class: 'btn btn-primary'
