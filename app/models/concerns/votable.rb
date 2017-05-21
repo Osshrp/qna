@@ -2,33 +2,36 @@ module Votable
   extend ActiveSupport::Concern
   included do
     has_many :votes, as: :votable, dependent: :destroy
-
-    accepts_nested_attributes_for :votes
-
   end
 
   def like_by(user)
     unless voted_by?(user)
-      votes.create(value: "like", user: user)
-      self.rating += 1
-      self.save
+      transaction do
+        votes.create(value: 1, user: user)
+        self.rating += 1
+        self.save
+      end
     end
   end
 
   def dislike_by(user)
     unless voted_by?(user)
-      votes.create(value: "dislike", user: user)
-      self.rating -= 1
-      self.save
+      transaction do
+        votes.create(value: -1, user: user)
+        self.rating -= 1
+        self.save
+      end
     end
   end
 
   def clear_vote_by(user)
     if voted_by?(user)
-      vote = votes.where(user: user).first
-      vote.value == "like" ? self.rating -= 1 : self.rating += 1
-      self.save
-      vote.destroy
+      transaction do
+        vote = votes.where(user: user).first
+        vote.value == 1 ? self.rating -= 1 : self.rating += 1
+        self.save
+        vote.destroy
+      end
     end
   end
 

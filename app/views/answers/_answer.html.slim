@@ -1,17 +1,14 @@
 div id="answer-#{answer.id}"
-
   li.list-group-item
-    <div id = "rate-answer-#{answer.id}">
+    div id="rate-answer-#{answer.id}"
       = answer.rating
-    </div>
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
     - if current_user && !current_user.author_of?(answer)
-      <span class = "pull-right like-badge", id = "vote-answer-#{answer.id}">
+      span class="pull-right like-badge" id="vote-answer-#{answer.id}"
         - if answer.votes.first
-          | You've #{answer.votes.first.value}d it
-      </span>
+          | You've #{Vote.show(answer.votes.first.value)}d it
     .vote
       = render 'common/vote', resource: answer, vote: answer.votes.first
     ul.answer-attachments

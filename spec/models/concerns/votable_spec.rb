@@ -9,7 +9,7 @@ shared_examples_for 'votable' do
   describe '#like_by' do
     it 'should set like to votable' do
       votable.like_by(user)
-      expect(Vote.last.value).to eq "like"
+      expect(Vote.last.value).to eq 1
     end
 
     it 'should increase votables rating' do
@@ -21,7 +21,7 @@ shared_examples_for 'votable' do
   describe '#dislike_by' do
     it 'should set dislike to votable' do
       votable.dislike_by(user)
-      expect(Vote.last.value).to eq "dislike"
+      expect(Vote.last.value).to eq -1
     end
 
     it 'should decrease votables rating' do
