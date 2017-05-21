@@ -8,11 +8,12 @@ module Voted
   def vote
     respond_to do |format|
       unless current_user.author_of?(@votable)
-        @votable.send("#{params[:vote]}_by", current_user)
+        set_like
         @vote = @votable.votes.where(user: current_user).first
         format.json { render json: { resource: controller_name.singularize ,
                                      votable: @votable,
-                                     vote: @vote } }
+                                     vote: @vote,
+                                     vote_value: vote_value } }
       else
         format.html { redirect_to questions_path,
           notice: "You do not have permission to rate this #{controller_name.singularize}" }
@@ -28,5 +29,14 @@ module Voted
 
   def set_votable
     @votable = model_klass.find(params[:id])
+  end
+
+  def vote_value
+    Vote.show(@vote.value) if @vote
+  end
+
+  def set_like
+    vote = { "like" => :like_by, "dislike" => :dislike_by, "clear_vote" => :clear_vote_by }
+    @votable.send(vote[params[:vote]], current_user) if vote.has_key?(params[:vote])
   end
 end

@@ -3,6 +3,7 @@ $(document).bind 'ajax:success', (e, data, status, xhr) ->
   votable = json.votable
   type = json.resource
   vote = json.vote
+  vote_value = json.vote_value
   if vote == null
     $('#rate-' + type + '-' + votable.id).html(votable.rating)
     $('#vote-' + type + '-' + votable.id).html('')
@@ -10,6 +11,6 @@ $(document).bind 'ajax:success', (e, data, status, xhr) ->
     $('form#clear-vote-' + type + '-' + votable.id).hide()
   else
     $('#rate-' + type + '-' + votable.id).html(votable.rating)
-    $('#vote-' + type + '-' + votable.id).html("You've " + vote.value + "d it")
+    $('#vote-' + type + '-' + votable.id).html("You've " + vote_value + "d it")
     $('form#vote-' + type + '-' + votable.id).hide()
     $('form#clear-vote-' + type + '-' + votable.id).show()
