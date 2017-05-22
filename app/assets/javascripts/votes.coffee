@@ -4,16 +4,11 @@ $(document).bind 'ajax:success', (e, data, status, xhr) ->
   type = json.resource
   vote = json.vote
   vote_value = json.vote_value
-  console.log('object: ', '#vote-' + type + '-' + votable.id)
-  console.log('type: ', type)
-  console.log('vote: ', vote)
-  console.log('vote_value: ', vote_value)
+  votable_with_id = type + '-' + votable.id
   if vote
-    $('#vote-' + type + '-' + votable.id).html("You've " + vote_value + "d it")
-    $('form#vote-' + type + '-' + votable.id).hide()
-    $('form#clear-vote-' + type + '-' + votable.id).show()
+    $('#vote-' + votable_with_id).html("You've " + vote_value + "d it")
   else
-    $('#vote-' + type + '-' + votable.id).html('')
-    $('form#vote-' + type + '-' + votable.id).show()
-    $('form#clear-vote-' + type + '-' + votable.id).hide()
-  $('#rate-' + type + '-' + votable.id).html(votable.rating)
+    $('#vote-' + votable_with_id).html('')
+  $('#rate-' + votable_with_id).html(votable.rating)
+  $('form#vote-' + votable_with_id).toggle()
+  $('form#clear-vote-' + votable_with_id).toggle()
