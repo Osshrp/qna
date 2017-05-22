@@ -32,7 +32,7 @@ module Voted
   end
 
   def vote_value
-    Vote.show(@vote.value) if @vote
+    @vote&.show(@vote.value)
   end
 
   def change_vote

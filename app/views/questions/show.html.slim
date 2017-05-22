@@ -4,7 +4,7 @@
   .panel-body
     .question
       .question-body
-        = render @question, vote: @vote
+        = render @question, vote: @question_vote
       ul.question-attachments
         = render 'common/attachments', resource: @question
       - if current_user && current_user.author_of?(@question)
