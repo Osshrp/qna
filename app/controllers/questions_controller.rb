@@ -8,7 +8,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @vote = @question.votes.where(user: current_user).first
+    @question_vote = @question.votes.where(user: current_user).first
     @answer = Answer.new
     @answer.attachments.build
   end

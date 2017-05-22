@@ -5,12 +5,11 @@ div id="answer-#{answer.id}"
     - if answer.best
       span.badge.best-answer-bage The best answer
     = answer.body
-    - if current_user && !current_user.author_of?(answer)
-      span class="pull-right like-badge" id="vote-answer-#{answer.id}"
-        - if answer.votes.first
-          | You've #{Vote.show(answer.votes.first.value)}d it
+    span class="pull-right like-badge" id="vote-answer-#{answer.id}"
+    - if current_user && answer.vote(current_user)
+      | You've #{Vote.show(answer.vote(current_user).value)}d it
     .vote
-      = render 'common/vote', resource: answer, vote: answer.votes.first
+      = render 'common/vote', resource: answer, vote: answer.vote(current_user)
     ul.answer-attachments
       = render 'common/attachments', resource: answer
 
