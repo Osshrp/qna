@@ -4,7 +4,7 @@ module Votable
     has_many :votes, as: :votable, dependent: :destroy
   end
 
-  def like_by(user)
+  def like(user)
     return if voted_by?(user)
     transaction do
       votes.create!(value: 1, user: user)
@@ -13,7 +13,7 @@ module Votable
     end
   end
 
-  def dislike_by(user)
+  def dislike(user)
     return if voted_by?(user)
     transaction do
       votes.create!(value: -1, user: user)
@@ -22,7 +22,7 @@ module Votable
     end
   end
 
-  def clear_vote_by(user)
+  def clear_vote(user)
     if voted_by?(user)
       transaction do
         if vote(user).value == 1

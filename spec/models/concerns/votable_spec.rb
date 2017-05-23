@@ -6,34 +6,34 @@ shared_examples_for 'votable' do
   let(:user) { create(:user) }
   let(:votable) { create(model.to_s.underscore.to_sym) }
 
-  describe '#like_by' do
+  describe '#like' do
     it 'should set like to votable' do
-      votable.like_by(user)
+      votable.like(user)
       expect(Vote.last.value).to eq 1
     end
 
     it 'should increase votables rating' do
-      votable.like_by(user)
+      votable.like(user)
       expect(votable.rating).to eq 1
     end
   end
 
-  describe '#dislike_by' do
+  describe '#dislike' do
     it 'should set dislike to votable' do
-      votable.dislike_by(user)
+      votable.dislike(user)
       expect(Vote.last.value).to eq -1
     end
 
     it 'should decrease votables rating' do
-      votable.dislike_by(user)
+      votable.dislike(user)
       expect(votable.rating).to eq -1
     end
   end
 
-  describe '#clear_vote_by' do
+  describe '#clear_vote' do
     it 'should clear users vote' do
-      votable.dislike_by(user)
-      expect { votable.clear_vote_by(user) }.to change(votable.votes, :count).by(-1)
+      votable.dislike(user)
+      expect { votable.clear_vote(user) }.to change(votable.votes, :count).by(-1)
     end
   end
 end
