@@ -16,7 +16,7 @@ module Voted
         format.json { render json: { resource: controller_name.singularize ,
                                      votable: @votable,
                                      vote: @vote,
-                                     vote_value: vote_value } }
+                                     vote_value: @vote&.show_value } }
       end
     end
   end
@@ -29,10 +29,6 @@ module Voted
 
   def set_votable
     @votable = model_klass.find(params[:id])
-  end
-
-  def vote_value
-    @vote&.show(@vote.value)
   end
 
   def change_vote
