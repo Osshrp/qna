@@ -2,16 +2,14 @@ module Votable
   extend ActiveSupport::Concern
   included do
     has_many :votes, as: :votable, dependent: :destroy
-
-    scope :test, ->(user, votable) { joins(:votes).where(user: user, votable_id: votable) }
   end
 
   def like_by(user)
     return if voted_by?(user)
     transaction do
       votes.create!(value: 1, user: user)
-      self.rating += 1
-      self.save!
+      self.class.increment_counter(:rating, self)
+      self.reload
     end
   end
 
@@ -19,18 +17,21 @@ module Votable
     return if voted_by?(user)
     transaction do
       votes.create!(value: -1, user: user)
-      self.rating -= 1
-      self.save!
+      self.class.decrement_counter(:rating, self)
+      self.reload
     end
   end
 
   def clear_vote_by(user)
     if voted_by?(user)
       transaction do
-        vote = votes.where(user: user).first
-        vote.value == 1 ? self.rating -= 1 : self.rating += 1
-        self.save!
-        vote.destroy
+        if vote(user).value == 1
+          self.class.decrement_counter(:rating, self)
+        else
+          self.class.increment_counter(:rating, self)
+        end
+        self.reload
+        vote(user).destroy
       end
     end
   end

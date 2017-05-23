@@ -5,7 +5,6 @@ class Vote < ApplicationRecord
   validates :value, uniqueness: { scope: [:user_id, :votable_id, :votable_type] }
 
   def show_value
-    hash = { 1 => :like, -1 => :dislike}
-    hash[value]
+    { 1 => :like, -1 => :dislike}[value]
   end
 end
