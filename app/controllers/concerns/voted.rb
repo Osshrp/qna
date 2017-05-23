@@ -8,8 +8,11 @@ module Voted
   def vote
     respond_to do |format|
       if current_user.author_of?(@votable)
-        format.html { redirect_to questions_path,
-          notice: "You do not have permission to rate this #{controller_name.singularize}" }
+        format.json { render json:
+          { votable: @votable,
+            resource: controller_name.singularize ,
+            error: "You do not have permission to vote for this #{controller_name.singularize}" },
+            status: 403 }
       else
         change_vote
         @vote = @votable.votes.where(user: current_user).first
@@ -32,7 +35,7 @@ module Voted
   end
 
   def change_vote
-    vote = { "like" => :like_by, "dislike" => :dislike_by, "clear_vote" => :clear_vote_by }
-    @votable.send(vote[params[:vote]], current_user) if vote.has_key?(params[:vote])
+    actions = %w{ like dislike clear_vote }
+    @votable.send(params[:vote], current_user) if actions.include?(params[:vote])
   end
 end

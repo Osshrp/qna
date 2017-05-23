@@ -52,14 +52,25 @@ shared_examples_for 'voted' do
 
     context 'author tries to like his resource' do
       it 'does not set like to resource' do
-        expect { patch :vote, params: { id: users_votable, vote: :like } }
+        expect { patch :vote, params: { id: users_votable, vote: :like }, format: :json }
           .to_not change(Vote, :count)
       end
 
       it 'does not increases rating' do
-        patch :vote, params: { id: users_votable, vote: :like }
+        patch :vote, params: { id: users_votable, vote: :like }, format: :json
         votable.reload
         expect(votable.rating).to eq 0
+      end
+
+      it 'returns 403 status' do
+        patch :vote, params: { id: users_votable, vote: :like }, format: :json
+        expect(response).to have_http_status(403)
+      end
+
+      it 'returns error message' do
+        patch :vote, params: { id: users_votable, vote: :like }, format: :json
+        expect(JSON(response.body)["error"])
+          eq("You do not have permission to vote for this #{controller.controller_name.singularize}")
       end
     end
   end
