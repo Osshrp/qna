@@ -11,3 +11,16 @@ $(document).on('click', '#question-update-submit', (e) ->
   $('form#edit-question').hide();
   $('.edit-question-link').show();
 )
+
+$ ->
+  App.cable.subscriptions.create('QuestionsChannel', {
+    connected: ->
+      @perform('follow')
+    ,
+    received: (data) ->
+      json = $.parseJSON(data)
+      question = json.question
+      link = json.link
+      li = "<li class='list-group-item'></li>"
+      $('.questions-list').append(JST["question"]({question: question, url: link}))
+  })
