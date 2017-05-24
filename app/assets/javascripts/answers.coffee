@@ -3,6 +3,18 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 ready = ->
   $('.best-answer-bage').closest('div').prependTo('.answers-list')
+
+  App.cable.subscriptions.create('AnswersChannel', {
+    connected: ->
+      question_id = $(".question").data("id")
+      @perform('follow', question_id: question_id)
+    ,
+    received: (data) ->
+      json = $.parseJSON(data)
+      answer= json.answer
+      link = json.link
+      $('.answers-list').append(JST["answer"]({answer: answer}))
+  })
 #
 $(document).on('turbolinks:load', ready)
 
