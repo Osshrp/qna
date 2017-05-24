@@ -2,7 +2,7 @@
   .panel-heading
     = @question.title
   .panel-body
-    .question
+    .question data-id="#{@question.id}"
       .question-body
         = render @question, vote: @question_vote
       ul.question-attachments

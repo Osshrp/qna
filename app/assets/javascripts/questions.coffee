@@ -21,6 +21,5 @@ $ ->
       json = $.parseJSON(data)
       question = json.question
       link = json.link
-      li = "<li class='list-group-item'></li>"
       $('.questions-list').append(JST["question"]({question: question, url: link}))
   })
