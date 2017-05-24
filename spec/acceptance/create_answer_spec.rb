@@ -32,4 +32,28 @@ feature 'Create answer', %q{
 
     expect(page).to have_no_selector('input')
   end
+
+  context 'multiple sessions' do
+    scenario "answer appears on another user's page", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'answer_body', with: 'Answer text'
+        click_on 'Create answer'
+
+        expect(page).to have_content 'Answer text'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Answer text'
+      end
+    end
+  end
 end
