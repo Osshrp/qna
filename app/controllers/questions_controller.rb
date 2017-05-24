@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question_vote = @question.votes.where(user: current_user).first
+    gon.answers = @question.answers
     @answer = Answer.new
     @answer.attachments.build
   end
