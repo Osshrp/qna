@@ -8,10 +8,12 @@
       = @answer.body
       ul.answer-attachments
         p Attachments:
-        - resource.attachments.each do |a|
+        - for a in @attachments
           div id="attachment-#{a.id}"
             li
-              a #{a.file.identifier} #{a.file.url}
+              a href="#{a.url}" #{a.filename}
+      - if gon.current_user_id == @question.user_id
+        a class='best-answer-link' data-remote='true' data-method='patch' href="/answers/#{@answer.id}/set_best" The best
       - if gon.current_user_id
         .vote
           form action="/answers/#{@answer.id}/vote" class='vote-form' id="vote-answer-#{@answer.id}" data-remote='true' method='post'
