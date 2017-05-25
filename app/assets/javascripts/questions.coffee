@@ -18,8 +18,8 @@ $ ->
       @perform('follow')
     ,
     received: (data) ->
-      json = $.parseJSON(data)
-      question = json.question
-      link = json.link
-      $('.questions-list').append(JST["question"]({question: question, url: link}))
+      question = $.parseJSON(data)
+      title = question.title
+      url = "/questions/" + question.id
+      $('.questions-list').append(JST["question"]({title: title, url: url}))
   })
