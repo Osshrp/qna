@@ -1,2 +1,32 @@
-li.list-group-item
-  | #{@answer.body}
+- if gon.current_user_id != @answer.user_id
+  div id="answer-#{@answer.id}"
+    li.list-group-item
+      div id="rate-answer-#{@answer.id}"
+        = @answer.rating
+        - if @answer.best
+          span.badge.best-answer-bage The best answer
+      = @answer.body
+      ul.answer-attachments
+        p Attachments:
+        - resource.attachments.each do |a|
+          div id="attachment-#{a.id}"
+            li
+              a #{a.file.identifier} #{a.file.url}
+      - if gon.current_user_id
+        .vote
+          form action="/answers/#{@answer.id}/vote" class='vote-form' id="vote-answer-#{@answer.id}" data-remote='true' method='post'
+            input type='hidden' name='_method' value='patch'
+            .form-group
+              .radio-inline
+                input type='radio' name='vote' value='like' checked='checked'
+                label for= 'vote_like' Like
+              .radio-inline
+                input type='radio' name='vote' value='dislike'
+                label for= 'vote_dislike' Dislike
+            .form-group
+              input type='submit' name='commit' value='Vote' class='btn btn-primary' data-disable-with='Vote'
+          form action="/answers/#{@answer.id}/vote" class='clear-vote-form' id="clear-vote-answer-#{@answer.id}" data-remote='true' method='post' style='display:none'
+            input type='hidden' name='_method' value='patch'
+            input type='hidden' name='vote' value='clear_vote'
+            .form-group
+              input type='submit' name='commit' value='Recal vote' class='btn btn-primary' data-disable-with='Recall vote'

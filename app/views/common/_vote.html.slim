@@ -7,7 +7,7 @@
         = radio_button_tag(:vote, 'like', class: 'form-control')
         = label_tag(:vote_like, 'Like')
       .radio-inline
-        = radio_button_tag(:vote, 'dislike')
+        = radio_button_tag(:vote, 'dislike', class: 'form-control')
         = label_tag(:vote_dislike, 'Dislike')
     .form-group
       = submit_tag 'Vote', class: 'btn btn-primary'

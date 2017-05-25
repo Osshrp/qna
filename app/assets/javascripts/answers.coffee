@@ -12,7 +12,6 @@ ready = ->
     received: (data) ->
       json = $.parseJSON(data)
       answer= json.answer
-      link = json.link
       $('.answers-list').append(JST["answer"]({answer: answer}))
   })
 #

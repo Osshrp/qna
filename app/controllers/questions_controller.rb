@@ -11,9 +11,9 @@ class QuestionsController < ApplicationController
 
   def show
     @question_vote = @question.votes.where(user: current_user).first
-    gon.answers = @question.answers
     @answer = Answer.new
     @answer.attachments.build
+    gon.current_user_id = current_user.id if current_user
   end
 
   def new
@@ -59,8 +59,7 @@ class QuestionsController < ApplicationController
     return if @question.errors.any?
     ActionCable.server.broadcast(
       'questions',
-      ApplicationController.render(json: { question: @question,
-                                           link: question_path(@question)})
+      ApplicationController.render(json: @question)
     )
   end
 
