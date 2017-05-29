@@ -2,16 +2,18 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-  App.cable.subscriptions.create('QuestionsCommentsChannel', {
+  App.cable.subscriptions.create('CommentablesCommentsChannel', {
     connected: ->
-      question_id = $(".question").data("id")
-      @perform('follow', question_id: question_id)
+      commentable_id = $(".question").data("id")
+      @perform('follow', commentable_name: "question", commentable_id: commentable_id)
 
     received: (data) ->
       json = $.parseJSON(data)
       comment= json.comment
       commentable = json.commentable
-      $('.question-' + commentable.id + '-comments-list').append(JST["comments"]({commentable: commentable, comment: comment}))
+      commentable_name = json.commentable_name
+      $('.' + commentable_name + '-' + commentable.id + '-comments-list')
+        .append(JST["comment"]({commentable: commentable, comment: comment}))
   })
 
 $(document).on('click', '.new-question-comment-link', (e) ->

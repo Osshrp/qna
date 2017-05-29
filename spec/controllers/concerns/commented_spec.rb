@@ -13,20 +13,20 @@ shared_examples_for 'commented' do
     context 'with valid attributes' do
       it 'associates comment with the user' do
         expect { post :create, params: { commentable_id => commentable,
-                comment: attributes_for(:comment) }, format: :js }
+                comment: attributes_for(:comment) }, format: :json }
                 .to change(@user.comments, :count).by(1)
       end
 
       it 'associates comment with the commentable' do
         expect { post :create, params: { commentable_id => commentable,
-                 comment: attributes_for(:comment) }, format: :js  }
+                 comment: attributes_for(:comment) }, format: :json  }
                  .to change(commentable.comments, :count).by(1)
       end
     end
     context 'with invalid attributes' do
       it 'does not save the comment' do
         expect { post :create, params: { commentable_id => commentable,
-          comment: attributes_for(:invalid_comment) } }
+          comment: attributes_for(:invalid_comment) }, format: :json }
           .to_not change(Comment, :count)
       end
     end

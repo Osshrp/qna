@@ -9,16 +9,16 @@ feature 'Create comment', %q{
   given(:question) { create(:question, user: user) }
 
   context 'Authenticated user' do
-    scenario 'tries to create comment to his quesiton' do
+    scenario 'tries to create comment to his quesiton', js: true do
       sign_in(user)
       visit question_path(question)
       within '.comments' do
         click_on 'New comment'
-        fill_in 'Body', with: 'Text text'
-        click_on 'Save'
+        fill_in 'Comment body', with: 'Text text'
+        click_on 'Save comment'
 
         expect(page).to have_content 'Text text'
-        expect(page).to have_not_button 'Save comment'
+        expect(page).to have_no_button 'Save comment'
       end
     end
     scenario "tries to create comment to another user's question"
@@ -33,7 +33,7 @@ feature 'Create comment', %q{
     scenario 'tries to create comment to question' do
       visit question_path(question)
       within '.comments' do
-        expect(page).to have_not_link 'New comment'
+        expect(page).to have_no_link 'New comment'
       end
     end
   end
