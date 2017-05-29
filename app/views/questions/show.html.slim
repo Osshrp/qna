@@ -8,6 +8,16 @@
       ul.question-attachments
         = render 'common/attachments', resource: @question
       - if current_user && current_user.author_of?(@question)
+      ul class="question-#{@question.id}-comments-list"
+        = render 'common/comments', resource: @question
+        = link_to 'New comment', '', class: 'new-question-comment-link'
+        = form_for [@question, @comment], remote: true,
+          html: { id: 'question-comment', style: 'display: none' } do |f|
+          .form-group
+            = f.label :body, 'Comment body'
+            = f.text_area :body, class: 'form-control'
+          .form-group
+            = f.submit 'Save comment', class: 'btn btn-primary', id: 'question-comment-submit'
         .edit-delete
           = link_to 'Edit question', '', class: 'edit-question-link',
             data: { question_id: @question.id }

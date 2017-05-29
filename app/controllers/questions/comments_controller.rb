@@ -5,5 +5,6 @@ class Questions::CommentsController < CommentsController
 
   def set_commentable
     @commentable = Question.find(params[:question_id])
+    gon.commentable_name = 'question'
   end
 end

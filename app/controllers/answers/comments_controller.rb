@@ -5,5 +5,6 @@ class Answers::CommentsController < CommentsController
 
   def set_commentable
     @commentable = Answer.find(params[:answer_id])
+    gon.commentable_name = 'answer'
   end
 end

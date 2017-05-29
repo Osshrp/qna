@@ -1,0 +1,5 @@
+- if resource.comments.exists?
+  p Comments:
+  - resource.comments.each do |comment|
+    li.well
+      = comment.body
