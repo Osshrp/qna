@@ -14,7 +14,6 @@ ready = ->
       answer= json.answer
       attachments = json.attachments
       question = json.question
-      console.log("att: ", attachments[0])
       $('.answers-list').append(JST["answer"]({answer: answer, attachments: attachments, question: question}))
   })
 #

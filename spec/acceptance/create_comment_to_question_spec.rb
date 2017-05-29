@@ -10,6 +10,7 @@ feature 'Create comment', %q{
 
   context 'Authenticated user' do
     scenario 'tries to create comment to his quesiton' do
+      sign_in(user)
       visit question_path(question)
       within '.comments' do
         click_on 'New comment'
@@ -17,7 +18,7 @@ feature 'Create comment', %q{
         click_on 'Save'
 
         expect(page).to have_content 'Text text'
-        expect(page).to have_not_button 'Save'
+        expect(page).to have_not_button 'Save comment'
       end
     end
     scenario "tries to create comment to another user's question"
@@ -29,6 +30,11 @@ feature 'Create comment', %q{
   end
 
   context 'Guest' do
-    scenario 'tries to create comment to question'
+    scenario 'tries to create comment to question' do
+      visit question_path(question)
+      within '.comments' do
+        expect(page).to have_not_link 'New comment'
+      end
+    end
   end
 end
