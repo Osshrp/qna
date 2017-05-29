@@ -7,10 +7,10 @@
         = render @question, vote: @question_vote
       ul.question-attachments
         = render 'common/attachments', resource: @question
-      - if current_user && current_user.author_of?(@question)
       .comments
-        ul class="question-#{@question.id}-comments-list"
+        ul class="question-#{@question.id}-comments-list list-group"
           = render 'common/comments', resource: @question
+        - if current_user
           = link_to 'New comment', '', class: 'new-question-comment-link'
           = form_for [@question, @comment], remote: true,
             html: { id: 'question-comment', style: 'display: none' } do |f|
@@ -19,7 +19,8 @@
               = f.text_area :body, class: 'form-control'
             .form-group
               = f.submit 'Save comment', class: 'btn btn-primary', id: 'question-comment-submit'
-      .edit-delete
+      - if current_user && current_user.author_of?(@question)
+        .edit-delete
         = link_to 'Edit question', '', class: 'edit-question-link',
           data: { question_id: @question.id }
         '

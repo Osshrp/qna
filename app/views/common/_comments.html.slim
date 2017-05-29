@@ -1,5 +1,8 @@
 - if resource.comments.exists?
   p Comments:
   - resource.comments.each do |comment|
-    li.well
-      = comment.body
+    - if comment.persisted?
+      li.well.list-group-item
+        = comment.body
+      - if current_user.author_of?(comment)
+        = link_to 'Delete comment', [resource, comment], method: :delete

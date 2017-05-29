@@ -14,6 +14,13 @@ class CommentsController < ApplicationController
     end
   end
 
+  def destroy
+    @comment = Comment.find(params[:id])
+    if current_user.author_of?(@comment)
+      @comment.destroy
+    end
+  end
+
   private
 
   def comment_params

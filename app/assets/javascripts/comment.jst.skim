@@ -1,1 +1,2 @@
-= @comment.body
+li.well.list-group-item
+  = @comment.body
