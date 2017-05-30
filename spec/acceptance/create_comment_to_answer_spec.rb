@@ -14,7 +14,7 @@ feature 'Create comment', %q{
     scenario 'tries to create comment to his answer', js: true do
       sign_in(user)
       visit question_path(question)
-      within ".answer-#{answer.id}-comments" do
+      within "#answer-#{answer.id}" do
         click_on 'New comment'
         fill_in 'Comment body', with: 'Text text'
         click_on 'Save comment'

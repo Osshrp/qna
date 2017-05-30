@@ -7,6 +7,6 @@ $ ->
 $(document).on('click', '.new-question-comment-link', (e) ->
   e.preventDefault();
   question_id = $(this).attr('data-question-id')
-  $(this).hide();
-  $('form#question-' + question_id + '-comment').show();
+  $(this).toggle();
+  $('form#question-' + question_id + '-comment').toggle();
 )
