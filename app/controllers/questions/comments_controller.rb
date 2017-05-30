@@ -1,5 +1,5 @@
 class Questions::CommentsController < CommentsController
-  before_action :set_commentable
+  before_action :set_commentable, only: :create
 
   private
 

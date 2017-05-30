@@ -1,4 +1,4 @@
-div id="answer-#{answer.id}"
+div class='answer' id="answer-#{answer.id}" data-id="#{answer.id}"
   li.list-group-item
     div id="rate-answer-#{answer.id}"
       = answer.rating
@@ -12,7 +12,10 @@ div id="answer-#{answer.id}"
       = render 'common/vote', resource: answer, vote: vote(answer)
     ul.answer-attachments
       = render 'common/attachments', resource: answer
-
+    div class="answer-#{answer.id}-comments"
+      ul class="answer-#{answer.id}-comments-list list-group"
+        = render 'common/comments', resource: answer
+    = render 'comments/comment_form', resource: answer, resource_name: 'answer', comment: @comment
     .delete-edit-answer
       - if current_user && current_user.author_of?(answer.question)
         = link_to 'The best', set_best_answer_path(answer), remote: true, method: :patch,

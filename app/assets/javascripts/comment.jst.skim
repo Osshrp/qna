@@ -1,2 +1,5 @@
-li.well.list-group-item
+li class='well list-group-item' id="#{@resource}-comment-#{@comment.id}"
   = @comment.body
+  - if gon.current_user_id == @comment.user_id
+    .comment-delete
+      a href="#{@delete_link}" data-remote='true' data-method='delete' Delete comment
