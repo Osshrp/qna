@@ -21,3 +21,34 @@
 
 var App = App || {};
 App.cable = ActionCable.createConsumer();
+
+var commentsSubscription = function(resource) {
+  App.cable.subscriptions.create('CommentablesCommentsChannel', {
+  connected: function() {
+    var subscriptions = this
+    var commentable_ids = []
+    $('.' + resource).each(function() {
+      return subscriptions.perform('follow', {
+        commentable_name: resource,
+        commentable_id: $(this).attr('data-id')
+      });
+    })
+  },
+  received: function(data) {
+    var comment, commentable, commentable_name, delete_link, json;
+    json = $.parseJSON(data);
+    comment = json.comment;
+    commentable = json.commentable;
+    commentable_name = json.commentable_name;
+    delete_link = '/' + commentable_name + 's/' + commentable.id + '/comments/' + comment.id;
+    $('.' + commentable_name + '-' + commentable.id + '-comments-list').append(JST["comment"]({
+      commentable: commentable,
+      comment: comment,
+      delete_link: delete_link,
+      resource: resource
+    }));
+    $('form#' + resource + '-comment').toggle();
+    return $('.new-' + resource + '-comment-link').toggle();
+  }
+});
+};

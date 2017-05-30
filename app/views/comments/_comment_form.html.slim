@@ -1,0 +1,9 @@
+- if current_user
+  = link_to 'New comment', '', class: "new-#{resource_name}-comment-link", data: { "#{resource_name}_id" => resource.id }
+  = form_for [resource, comment], remote: true,
+    html: { id: "#{resource_name}-#{resource.id}-comment", style: 'display: none' } do |f|
+    .form-group
+      = f.label :body, 'Comment body'
+      = f.text_area :body, class: 'form-control'
+    .form-group
+      = f.submit 'Save comment', class: 'btn btn-primary', id: "#{resource_name}-comment-submit"
