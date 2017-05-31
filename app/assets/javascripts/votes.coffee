@@ -13,7 +13,3 @@ $ ->
     $('#rate-' + votable_with_id).html(votable.rating)
     $('form#vote-' + votable_with_id).toggle()
     $('form#clear-vote-' + votable_with_id).toggle()
-  # $('div.comments').bind 'ajax:success', (e, data, status, xhr) ->
-  #   json = $.parseJSON(xhr.responseText)
-  #   commentable = json.commetable
-  #   comment = json.comment
