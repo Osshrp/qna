@@ -4,11 +4,14 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: [:destroy, :update, :set_best]
   before_action :set_question, only: [:create]
 
+  respond_to :js
+  respond_to :json, only: :create
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     @answer.save
+    respond_with @answer
   end
 
   def update

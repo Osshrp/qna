@@ -2,11 +2,12 @@ class QuestionsController < ApplicationController
   include Voted
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :update, :destroy]
-
   after_action :publish_question, only: [:create]
 
+  respond_to :html, :js
+
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
@@ -16,25 +17,21 @@ class QuestionsController < ApplicationController
     @answer.attachments.build
     gon.question_id = @question.id
     gon.current_user_id = current_user.id if current_user
+    respond_with @question
   end
 
   def new
-    @question = current_user.questions.new
-    @question.attachments.build
+    respond_with(@question = current_user.questions.new)
   end
 
   def create
-    @question = current_user.questions.new(question_params)
-    if @question.save
-      redirect_to @question, notice: 'Your question successfully created'
-    else
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def update
     if current_user.author_of?(@question)
       @question.update(question_params)
+      respond_with @question
     else
       redirect_to questions_path,
         alert: 'You do not have permission to update this question'
@@ -43,8 +40,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     if current_user.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path, notice: 'Your question successfully deleted'
+      respond_with(@question.destroy)
     else
       redirect_to questions_path,
         notice: 'You do not have permission to delete this question'
