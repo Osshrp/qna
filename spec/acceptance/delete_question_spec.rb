@@ -15,7 +15,7 @@ feature 'Author deletes question', %q{
     visit question_path(user_with_questions.questions.first)
     click_on 'Delete question'
 
-    expect(page).to have_content 'Your question successfully deleted'
+    expect(page).to have_content 'Question was successfully destroyed'
     expect(page).to have_no_content question.title
   end
 
