@@ -1,9 +1,10 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
 
+  respond_to :json, :js
+
   def create
-    @comment = @commentable.comments.new(comment_params)
-    @comment.user = current_user
+    @comment = @commentable.comments.new(comment_params.merge(user: current_user))
     gon.commentabel_id = @commentable.id
     respond_to do |format|
       if @comment.save
@@ -17,7 +18,7 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.find(params[:id])
     if current_user.author_of?(@comment)
-      @comment.destroy
+      respond_with @comment.destroy
     end
   end
 
