@@ -12,9 +12,6 @@ class QuestionsController < ApplicationController
 
   def show
     @question_vote = @question.votes.where(user: current_user).first
-    @answer = Answer.new
-    @comment = @question.comments.new
-    @answer.attachments.build
     gon.question_id = @question.id
     gon.current_user_id = current_user.id if current_user
     respond_with @question
