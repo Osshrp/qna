@@ -10,7 +10,7 @@
       .comments
         ul class="question-#{@question.id}-comments-list list-group"
           = render 'common/comments', resource: @question
-        = render 'comments/comment_form', resource: @question, resource_name: 'question', comment: @comment
+        = render 'comments/comment_form', resource: @question, resource_name: 'question'
       - if current_user && current_user.author_of?(@question)
         .edit-delete
         = link_to 'Edit question', '', class: 'edit-question-link',
@@ -37,13 +37,13 @@
       ul.answers-list
         = render @question.answers
     - if user_signed_in?
-      = form_for [@question, @answer], remote: true do |f|
+      = form_for [@question, answer = @question.answers.new], remote: true do |f|
         .answer-errors
         .form-group
           = f.label :body, 'Answer'
           = f.text_area :body, class: 'form-control'
         .form-group
-        = f.fields_for :attachments do |a|
+        = f.fields_for :attachments, answer.attachments.build do |a|
           = render 'common/attachment_fields', f: a
           .links
             = link_to_add_association 'add file', f, :attachments, partial: 'common/attachment_fields'
