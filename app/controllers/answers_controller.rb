@@ -8,10 +8,7 @@ class AnswersController < ApplicationController
   respond_to :json, only: :create
 
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.user = current_user
-    @answer.save
-    respond_with @answer
+    respond_with(@answer = @question.answers.create(answer_params.merge(user: current_user)))
   end
 
   def update
