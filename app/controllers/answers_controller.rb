@@ -13,7 +13,7 @@ class AnswersController < ApplicationController
 
   def update
     if current_user.author_of?(@answer)
-      @answer.update(answer_params)
+      respond_with(@answer.update(answer_params))
     else
       redirect_to question_path(@answer.question),
         alert: 'You do not have permission to update this answer'
@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
 
   def destroy
     if current_user.author_of?(@answer)
-      @answer.destroy
+      respond_with(@answer.destroy)
     else
       redirect_to question_path(@answer.question),
         alert: 'You do not have permission to delete this answer'
