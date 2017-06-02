@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170526083927) do
+ActiveRecord::Schema.define(version: 20170602073823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,15 @@ ActiveRecord::Schema.define(version: 20170526083927) do
     t.integer  "attachable_id"
     t.string   "attachable_type"
     t.index ["attachable_id", "attachable_type"], name: "index_attachments_on_attachable_id_and_attachable_type", using: :btree
+  end
+
+  create_table "authorizations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_authorizations_on_user_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
@@ -77,15 +86,16 @@ ActiveRecord::Schema.define(version: 20170526083927) do
   end
 
   create_table "votes", force: :cascade do |t|
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "value"
     t.integer  "votable_id"
     t.string   "votable_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "user_id"
-    t.integer  "value"
     t.index ["user_id"], name: "index_votes_on_user_id", using: :btree
     t.index ["votable_id", "votable_type"], name: "index_votes_on_votable_id_and_votable_type", using: :btree
   end
 
+  add_foreign_key "authorizations", "users"
   add_foreign_key "comments", "users"
 end
