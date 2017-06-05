@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, omniauth_providers: [:facebook, :twitter]
 
@@ -16,7 +16,7 @@ class User < ApplicationRecord
   end
 
   def self.find_for_oauth(auth)
-    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+    authorization = find_by_uid(auth)
     return authorization.user if authorization
 
     email = auth.info[:email]
@@ -29,5 +29,15 @@ class User < ApplicationRecord
       user.authorizations.create(provider: auth.provider, uid: auth.uid.to_s)
     end
     user
+  end
+
+  def self.find_by_uid(auth)
+    Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+  end
+
+  protected
+
+  def confirmation_required?
+    false
   end
 end
