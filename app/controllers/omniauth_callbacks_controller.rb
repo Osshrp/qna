@@ -9,8 +9,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def new_email
     if params[:email].present?
-      session[:oauth].info.email = parmas[:email]
-      auth(session[:oauth])
+      oauth = kyes_to_sym(session[:oauth])
+      oauth[:info][:email] = params[:email]
+      oauth[:info][:need_to_confirm] = true
+      auth(oauth)
     else
       set_flash_message(:error, :empty_email) if is_navigational_format?
       render template: 'users/email'
@@ -25,15 +27,22 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def auth(oauth)
-    byebug
-    if oauth.info.email.present? || User.find_by_uid(oauth)
+    if (oauth[:info][:email].present? && oauth[:info][:need_to_confirm]) || User.find_by_uid(oauth)
       @user = User.find_for_oauth(oauth)
-      if @user.persisted?
+      if @user.persisted? && @user.confirmed?
         sign_in_and_redirect @user, event: :authentication
-        set_flash_message(:notice, :success, kind: oauth.provider) if is_navigational_format?
+        set_flash_message(:notice, :success, kind: oauth[:provider]) if is_navigational_format?
       end
     else
       render 'users/email'
     end
+  end
+
+  def kyes_to_sym(hash)
+    oauth = {}
+    hash.each do |key, value|
+      oauth[key.to_sym] = value.is_a?(Hash) ? value.symbolize_keys! : value
+    end
+    oauth
   end
 end
