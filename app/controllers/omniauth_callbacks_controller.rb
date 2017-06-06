@@ -23,15 +23,19 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def authenticate_user(provider)
     session[:oauth] = request.env['omniauth.auth']
+    byebug
     auth(session[:oauth])
   end
 
   def auth(oauth)
-    if (oauth[:info][:email].present? && oauth[:info][:need_to_confirm]) || User.find_by_uid(oauth)
+    if oauth[:info][:email].present?
       @user = User.find_for_oauth(oauth)
-      if @user.persisted? && @user.confirmed?
+      if @user && @user.persisted?
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: oauth[:provider]) if is_navigational_format?
+      else
+        set_flash_message(:notice, :failure, kind: oauth[:provider], reason: 'you need to confirm email') if is_navigational_format?
+        redirect_to root_path
       end
     else
       render 'users/email'
