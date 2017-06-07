@@ -23,7 +23,7 @@ RSpec.describe User do
 
   describe '.find_for_oauth' do
     let!(:user)  { create(:user) }
-    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+    let(:auth) { OmniAuth::AuthHash.new('oauth.provider' => 'facebook', 'oauth.uid' => '123456') }
 
     context 'user already has authorization' do
       it 'returns the user' do
@@ -34,7 +34,8 @@ RSpec.describe User do
 
     context 'user has not authorization' do
       context 'user already exists' do
-        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: user.email }) }
+        let(:auth) { OmniAuth::AuthHash.new('oauth.provider' => 'facebook',
+            'oauth.uid' => '123456', 'oauth.email' => user.email) }
         it 'does not create new user' do
           expect { User.find_for_oauth(auth) }.to_not change(User, :count)
         end
@@ -46,8 +47,8 @@ RSpec.describe User do
         it 'creates authorization with provider and uid' do
           authorization = User.find_for_oauth(auth).authorizations.first
 
-          expect(authorization.provider).to eq auth.provider
-          expect(authorization.uid).to eq auth.uid
+          expect(authorization.provider).to eq auth['oauth.provider']
+          expect(authorization.uid).to eq auth['oauth.uid']
         end
 
         it 'retruns the user' do
@@ -56,7 +57,8 @@ RSpec.describe User do
       end
 
       context 'user does not exixts' do
-        let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'new@email.com' }) }
+        let(:auth) { OmniAuth::AuthHash.new('oauth.provider' => 'facebook',
+            'oauth.uid' => '123456', 'oauth.email' => 'new@email') }
 
         it 'creates new user' do
           expect { User.find_for_oauth(auth) }.to change(User, :count).by(1)
@@ -66,7 +68,7 @@ RSpec.describe User do
         end
         it 'fills user email'do
           user = User.find_for_oauth(auth)
-          expect(user.email).to eq auth.info[:email]
+          expect(user.email).to eq auth['oauth.email']
         end
         it 'creates authorization for user' do
           user = User.find_for_oauth(auth)
@@ -75,8 +77,8 @@ RSpec.describe User do
         it 'creates authoriation with provider and uid' do
           authorization = User.find_for_oauth(auth).authorizations.first
 
-          expect(authorization.provider).to eq auth.provider
-          expect(authorization.uid).to eq auth.uid
+          expect(authorization.provider).to eq auth['oauth.provider']
+          expect(authorization.uid).to eq auth['oauth.uid']
         end
       end
     end
