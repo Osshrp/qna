@@ -26,7 +26,8 @@ feature 'Authenticate with remote provider', %q{
       expect(page).to have_content "Twitter did not provide your email, please enter it"
       fill_in 'email', with: 'user@testemail.com'
       click_button 'Save'
-      expect(page).to have_content "Successfully authenticated from twitter account"
+      expect(page).to have_content "Could not authenticate you from twitter because
+                                    \"you need to confirm email"
     end
 
     scenario "User leaves email field empty" do

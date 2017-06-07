@@ -9,10 +9,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def new_email
     if params[:email].present?
-      oauth = kyes_to_sym(session[:oauth])
-      oauth[:info][:email] = params[:email]
-      oauth[:info][:need_to_confirm] = true
-      auth(oauth)
+      session['oauth.email'] = params[:email]
+      session['oauth.need_to_confirm'] = true
+      auth
     else
       set_flash_message(:error, :empty_email) if is_navigational_format?
       render template: 'users/email'
@@ -22,31 +21,25 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def authenticate_user(provider)
-    session[:oauth] = request.env['omniauth.auth']
-    byebug
-    auth(session[:oauth])
-  end
-
-  def auth(oauth)
-    if oauth[:info][:email].present?
-      @user = User.find_for_oauth(oauth)
-      if @user && @user.persisted?
-        sign_in_and_redirect @user, event: :authentication
-        set_flash_message(:notice, :success, kind: oauth[:provider]) if is_navigational_format?
-      else
-        set_flash_message(:notice, :failure, kind: oauth[:provider], reason: 'you need to confirm email') if is_navigational_format?
-        redirect_to root_path
-      end
-    else
+    session['oauth.uid'] = request.env['omniauth.auth'][:uid]
+    session['oauth.provider'] = request.env['omniauth.auth'][:provider]
+    session['oauth.email'] = request.env['omniauth.auth'][:info][:email]
+    if session['oauth.email'].blank?
       render 'users/email'
+    else
+      auth
     end
   end
 
-  def kyes_to_sym(hash)
-    oauth = {}
-    hash.each do |key, value|
-      oauth[key.to_sym] = value.is_a?(Hash) ? value.symbolize_keys! : value
+  def auth
+    @user = User.find_for_oauth(session)
+    if @user && @user.persisted?
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: session['oauth.provider']) if is_navigational_format?
+    else
+      set_flash_message(:notice, :failure, kind: session['oauth.provider'],
+        reason: 'you need to confirm email') if is_navigational_format?
+      redirect_to root_path
     end
-    oauth
   end
 end
