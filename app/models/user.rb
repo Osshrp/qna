@@ -19,19 +19,19 @@ class User < ApplicationRecord
     authorization = find_by_uid(auth)
     return authorization.user if authorization
 
-    email = auth['oauth.email']
+    email = auth['devise.email']
     user = User.where(email: email).first
     unless user
       password = Devise.friendly_token[0, 20]
       user = User.create!(email: email, password: password, password_confirmation: password)
     end
-    user.authorizations.create(provider: auth['oauth.provider'], uid: auth['oauth.uid'].to_s)
-    auth['oauth.need_to_confirm'] ? user.send_confirmation_instructions : user.skip_confirmation!
+    user.authorizations.create(provider: auth['devise.provider'], uid: auth['devise.uid'].to_s)
+    auth['devise.need_to_confirm'] ? user.send_confirmation_instructions : user.skip_confirmation!
     user
   end
 
   def self.find_by_uid(auth)
-    Authorization.where(provider: auth['oauth.provider'], uid: auth['oauth.uid'].to_s).first
+    Authorization.where(provider: auth['devise.provider'], uid: auth['devise.uid'].to_s).first
   end
 
   protected
