@@ -9,8 +9,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def new_email
     if params[:email].present?
-      session['oauth.email'] = params[:email]
-      session['oauth.need_to_confirm'] = true
+      session['devise.email'] = params[:email]
+      session['devise.need_to_confirm'] = true
       auth
     else
       set_flash_message(:error, :empty_email) if is_navigational_format?
@@ -21,10 +21,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def authenticate_user(provider)
-    session['oauth.uid'] = request.env['omniauth.auth'][:uid]
-    session['oauth.provider'] = request.env['omniauth.auth'][:provider]
-    session['oauth.email'] = request.env['omniauth.auth'][:info][:email]
-    if session['oauth.email'].blank?
+    session['devise.uid'] = request.env['omniauth.auth'][:uid]
+    session['devise.provider'] = request.env['omniauth.auth'][:provider]
+    session['devise.email'] = request.env['omniauth.auth'][:info][:email]
+    if session['devise.email'].blank?
       render 'users/email'
     else
       auth
@@ -34,10 +34,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def auth
     @user = User.find_for_oauth(session)
     if @user && @user.persisted? && @user.confirmed?
+      set_flash_message(:notice, :success, kind: session['devise.provider']) if is_navigational_format?
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: session['oauth.provider']) if is_navigational_format?
     else
-      set_flash_message(:notice, :failure, kind: session['oauth.provider'],
+      set_flash_message(:notice, :failure, kind: session['devise.provider'],
         reason: 'you need to confirm email') if is_navigational_format?
       redirect_to root_path
     end
