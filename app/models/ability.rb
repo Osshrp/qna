@@ -24,6 +24,12 @@ class Ability
     guest_abilities
     can :create, [Question, Answer, Comment]
     can :update, [Question, Answer], user_id: user.id
-    can :set_best, Answer, question: { user_id: user.id }
+    can :destroy, [Question, Answer, Comment], user_id: user.id
+    can :set_best, Answer do |answer|
+      answer.question.user_id == user.id
+    end
+    cannot :set_best, Answer do |answer|
+      answer.question.user_id != user.id
+    end
   end
 end
