@@ -23,6 +23,7 @@ class Ability
   def user_abilities
     guest_abilities
     can :create, [Question, Answer, Comment]
-    can :update, [Question, Answer], user: user
+    can :update, [Question, Answer], user_id: user.id
+    can :set_best, Answer, question: { user_id: user.id }
   end
 end
