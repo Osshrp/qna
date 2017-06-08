@@ -22,7 +22,8 @@ describe Ability do
   describe 'for user' do
     let(:user) { create(:user) }
     let(:other_user) { create(:user) }
-    let(:question) { create(:question, user: user) }
+    let!(:question) { create(:question, user: user) }
+    let(:answer) { create(:answer, question: question) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
@@ -36,7 +37,12 @@ describe Ability do
     it { should be_able_to :update, create(:answer, user: user), user: user }
     it { should_not be_able_to :update, create(:answer, user: other_user), user: user }
 
-    it { should be_able_to :set_best, create(:answer, question: question), user: user  }
-    it { should_not be_able_to :set_best, create(:answer, question: question), user: other_user  }
+    it { should be_able_to :destroy, question, user: user}
+    it { should_not be_able_to :destroy, create(:question, user: other_user), user: user }
+    it { should be_able_to :destroy, create(:answer, user: user), user: user}
+    it { should_not be_able_to :destroy, create(:answer, user: other_user), user: user }
+
+    it { should be_able_to :set_best, answer, user: user  }
+    # it { should_not be_able_to :set_best, create(:answer, question: question), user: other_user  }
   end
 end
