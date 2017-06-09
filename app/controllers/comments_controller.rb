@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
 
   respond_to :json, :js
 
+  authorize_resource
+
   def create
     @comment = @commentable.comments.new(comment_params.merge(user: current_user))
     gon.commentabel_id = @commentable.id
