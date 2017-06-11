@@ -28,14 +28,16 @@ class Ability
 
     can :set_best, Answer, question: { user_id: user.id  }
 
-    cannot :set_best, Answer do |answer|
-      !user.author_of?(answer.question)
+    can :vote, Answer do |answer|
+      !user.author_of?(answer)
     end
 
-    can :vote, Vote do |votable|
-      votable.user_id != user.id
+    can :vote, Question do |question|
+      !user.author_of?(question)
     end
 
-    cannot :vote, Vote, votable: { user_id: user.id }
+    can :destroy, Attachment do |attachment|
+      attachment.attachable.user_id == user.id
+    end
   end
 end

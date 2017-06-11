@@ -129,7 +129,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'shows flash message' do
-        expect(flash[:alert]).to eq('You do not have permission to update this question')
+        expect(flash[:alert]).to eq('You are not authorized to access this page.')
       end
     end
   end

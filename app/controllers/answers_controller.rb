@@ -14,30 +14,15 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(@answer)
-      respond_with(@answer.update(answer_params))
-    else
-      redirect_to question_path(@answer.question),
-        alert: 'You do not have permission to update this answer'
-    end
+    respond_with(@answer.update(answer_params)) if current_user.author_of?(@answer)
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      respond_with(@answer.destroy)
-    else
-      redirect_to question_path(@answer.question),
-        alert: 'You do not have permission to delete this answer'
-    end
+    respond_with(@answer.destroy) if current_user.author_of?(@answer)
   end
 
   def set_best
-    if current_user.author_of?(@answer.question)
-      @answer.set_best
-    else
-      redirect_to question_path(@answer.question),
-        alert: 'You do not have permission to rate this answer'
-    end
+    @answer.set_best if current_user.author_of?(@answer.question)
   end
 
   private

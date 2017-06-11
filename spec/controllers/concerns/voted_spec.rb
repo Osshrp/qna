@@ -3,7 +3,7 @@ require 'rails_helper'
 shared_examples_for 'voted' do
 
 
-  describe 'PATCH #set_vote' do
+  describe 'PATCH #vote' do
     sign_in_user
     let(:resource) { controller.controller_name.singularize.to_sym }
     let(:votable) { create(resource) }

@@ -70,12 +70,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to questions index view' do
         delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(answer.question)
+        expect(response).to redirect_to questions_path
       end
 
       it 'shows flash message' do
         delete :destroy, params: { id: answer }
-        expect(flash[:alert]).to eq('You do not have permission to delete this answer')
+        expect(flash[:alert]).to eq('You are not authorized to access this page.')
       end
     end
   end
@@ -118,11 +118,11 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'redirects to question show view' do
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to questions_path
       end
 
       it 'shows flash message' do
-        expect(flash[:alert]).to eq('You do not have permission to update this answer')
+        expect(flash[:alert]).to eq('You are not authorized to access this page.')
       end
     end
   end
@@ -148,11 +148,11 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'redirects to question show view' do
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to questions_path
       end
 
       it 'shows flash message' do
-        expect(flash[:alert]).to eq('You do not have permission to rate this answer')
+        expect(flash[:alert]).to eq('You are not authorized to access this page.')
       end
     end
 
@@ -167,11 +167,11 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'redirects to question show view' do
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to questions_path
       end
 
       it 'shows flash message' do
-        expect(flash[:alert]).to eq('You do not have permission to rate this answer')
+        expect(flash[:alert]).to eq('You are not authorized to access this page.')
       end
     end
   end
