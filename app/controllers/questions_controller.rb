@@ -31,19 +31,11 @@ class QuestionsController < ApplicationController
     if current_user.author_of?(@question)
       @question.update(question_params)
       respond_with @question
-    else
-      redirect_to questions_path,
-        alert: 'You do not have permission to update this question'
     end
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      respond_with(@question.destroy)
-    else
-      redirect_to questions_path,
-        notice: 'You do not have permission to delete this question'
-    end
+    respond_with(@question.destroy) if current_user.author_of?(@question)
   end
 
   private
