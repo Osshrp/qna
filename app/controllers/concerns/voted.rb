@@ -6,6 +6,7 @@ module Voted
   end
 
   def vote
+    authorize! :vote, @votable
     respond_to do |format|
       if can? :vote, @votable
         change_vote

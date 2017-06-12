@@ -37,7 +37,7 @@ class Ability
     end
 
     can :destroy, Attachment do |attachment|
-      attachment.attachable.user_id == user.id
+      user.author_of?(attachment.attachable)
     end
   end
 end

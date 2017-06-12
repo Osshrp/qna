@@ -1,5 +1,6 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_comment, only: :destroy
 
   respond_to :json, :js
 
@@ -18,8 +19,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
-    authorize! :destroy, @comment 
     respond_with @comment.destroy
   end
 
@@ -27,5 +26,9 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:body)
+  end
+
+  def set_comment
+    @comment = Comment.find(params[:id])
   end
 end
