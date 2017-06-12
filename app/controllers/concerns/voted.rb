@@ -7,19 +7,19 @@ module Voted
 
   def vote
     respond_to do |format|
-      if current_user.author_of?(@votable)
-        format.json { render json:
-          { votable: @votable,
-            resource: controller_name.singularize ,
-            error: "You do not have permission to vote for this #{controller_name.singularize}" },
-            status: 403 }
-      else
+      if can? :vote, @votable
         change_vote
         @vote = @votable.votes.where(user: current_user).first
         format.json { render json: { resource: controller_name.singularize ,
                                      votable: @votable,
                                      vote: @vote,
                                      vote_value: @vote&.show_value } }
+      else
+        format.json { render json:
+          { votable: @votable,
+            resource: controller_name.singularize ,
+            error: "You do not have permission to vote for this #{controller_name.singularize}" },
+            status: 403 }
       end
     end
   end

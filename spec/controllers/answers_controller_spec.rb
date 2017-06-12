@@ -117,12 +117,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq answer_body
       end
 
-      it 'redirects to question show view' do
-        expect(response).to redirect_to questions_path
-      end
-
-      it 'shows flash message' do
-        expect(flash[:alert]).to eq('You are not authorized to access this page.')
+      it 'returns 403 status' do
+        expect(response).to have_http_status(403)
       end
     end
   end
@@ -147,12 +143,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(assigns(:answer).best).to eq false
       end
 
-      it 'redirects to question show view' do
-        expect(response).to redirect_to questions_path
-      end
-
-      it 'shows flash message' do
-        expect(flash[:alert]).to eq('You are not authorized to access this page.')
+      it 'returns 403 status' do
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -166,12 +158,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(question.answers.first.best).to eq false
       end
 
-      it 'redirects to question show view' do
-        expect(response).to redirect_to questions_path
-      end
-
-      it 'shows flash message' do
-        expect(flash[:alert]).to eq('You are not authorized to access this page.')
+      it 'returns 403 status' do
+        expect(response).to have_http_status(403)
       end
     end
   end

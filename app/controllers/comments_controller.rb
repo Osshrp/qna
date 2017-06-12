@@ -19,9 +19,8 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment = Comment.find(params[:id])
-    if current_user.author_of?(@comment)
-      respond_with @comment.destroy
-    end
+    authorize! :destroy, @comment 
+    respond_with @comment.destroy
   end
 
   private

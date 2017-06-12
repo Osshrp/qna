@@ -1,4 +1,4 @@
-- if current_user && !current_user.author_of?(resource)
+- if can? :vote, resource
   = form_tag "/#{resource.class.name.pluralize.underscore}/#{resource.id}/vote",
     { class: 'vote-form', id: "vote-#{resource.class.name.underscore}-#{resource.id}",
       remote: true, method: :patch, style: "display: #{vote ? 'none' : 'block'}" }
@@ -14,7 +14,7 @@
   = form_tag "/#{resource.class.name.pluralize.underscore}/#{resource.id}/vote",
     { class: 'clear-vote-form', id: "clear-vote-#{resource.class.name.underscore}-#{resource.id}",
       remote: true, method: :patch,
-        style: "display: #{(vote && current_user.author_of?(vote)) ? 'block' : 'none'}" }
+        style: "display: #{(vote && can?(:vote, resource)) ? 'block' : 'none'}" }
     .form-group
       = hidden_field_tag :vote, 'clear_vote'
       = submit_tag 'Recall vote', class: 'btn btn-primary'
