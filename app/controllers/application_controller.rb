@@ -7,7 +7,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to questions_path, alert: exception.message
+    respond_to do |format|
+      format.html { redirect_to questions_path, alert: exception.message }
+      format.json { render json: { error: exception.message.to_s }, status: :forbidden }
+      format.js { head :forbidden }
+    end
   end
 
   check_authorization unless: :devise_controller?

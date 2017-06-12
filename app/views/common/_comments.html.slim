@@ -5,5 +5,5 @@
       li class='well list-group-item' id="question-comment-#{comment.id}"
         = comment.body
         .comment-delete
-          - if current_user && current_user.author_of?(comment)
+          - if can? :destroy, comment
             = link_to 'Delete comment', comment, method: :delete, remote: true
