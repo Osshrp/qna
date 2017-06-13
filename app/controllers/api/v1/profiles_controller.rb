@@ -6,7 +6,7 @@ class Api::V1::ProfilesController < ApplicationController
   authorize_resource class: User
 
   def index
-    @profiles = User.where("id != ?", current_resource_owner.id)
+    @profiles = User.where.not(id: current_resource_owner)
     respond_with @profiles
   end
 
