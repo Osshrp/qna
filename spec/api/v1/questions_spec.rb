@@ -32,18 +32,19 @@ describe 'Questions API' do
 
       %w(id title body created_at updated_at).each do |attr|
         it "question object contains #{attr}" do
-          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("0/#{attr}")
+          byebug
+          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("questions/0/#{attr}")
         end
       end
 
       context 'answers' do
         it 'included in question object' do
-          expect(response.body).to have_json_size(1).at_path("0/answers")
+          expect(response.body).to have_json_size(1).at_path("questions/0/answers")
         end
 
         %w(id body created_at updated_at).each do |attr|
           it "contains #{attr}" do
-            expect(response.body).to be_json_eql(answer.send(attr.to_sym).to_json).at_path("0/answers/0/#{attr}")
+            expect(response.body).to be_json_eql(answer.send(attr.to_sym).to_json).at_path("questions/0/answers/0/#{attr}")
           end
         end
       end
