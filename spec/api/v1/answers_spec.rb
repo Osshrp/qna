@@ -31,7 +31,7 @@ describe 'Answers API' do
       %w(id body created_at updated_at rating).each do |attr|
         it "question object contains #{attr}" do
           expect(response.body).
-            to be_json_eql(answers.first.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
+            to be_json_eql(answers.last.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
         end
       end
     end
@@ -60,15 +60,14 @@ describe 'Answers API' do
         file = File.open("#{Rails.root}/spec/spec_helper.rb")
         answer.attachments.create(file: file)
       end
-      before { get get api_v1_answer_path(answer),
+      before { get api_v1_answer_path(answer),
         as: :json, params: {access_token: access_token.token} }
 
       it 'returns 200 status code' do
-        byebug
         expect(response).to be_success
       end
 
-      %w(id title body created_at updated_at rating).each do |attr|
+      %w(id body created_at updated_at rating).each do |attr|
         it "answer object contains #{attr}" do
           expect(response.body).
             to be_json_eql(answer.send(attr.to_sym).to_json).at_path("answer/#{attr}")
