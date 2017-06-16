@@ -24,14 +24,11 @@ class Answer < ApplicationRecord
       hash = { id: a.id, url: a.file.url, filename: a.file.identifier }
       attaches << hash
     end
-    # ActionCable.server.broadcast(
-    #   "question_#{question.id}_answers",
-    #   ApplicationController.render(json: { question: question,
-    #                                        answer: self,
-    #                                        attachments: attaches })
+    ActionCable.server.broadcast(
+      "question_#{question.id}_answers",
       ApplicationController.render_with_serializer(user, json: { question: question,
                                                                  answer: self,
                                                                  attachments: attaches })
-    # )
+    )
   end
 end

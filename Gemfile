@@ -50,8 +50,9 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'cancancan'
 gem 'doorkeeper'
-# gem 'active_model_serializers', '0.9.0'
 gem 'active_model_serializers', '~> 0.10.4'
+gem 'oj'
+gem 'oj_mimic_json'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
