@@ -1,6 +1,8 @@
 class Api::V1::AnswersController < Api::V1::BaseController
   before_action :load_question, only: :index
 
+  respond_to :json
+
   skip_authorization_check
 
   def index
