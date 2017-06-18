@@ -109,13 +109,78 @@ describe 'Questions API' do
 
 
         it 'included in question object' do
-          expect(response.body).to have_json_size(1).at_path("question/attachments")
+          expect(response.body).to have_json_size(1).at_path('question/attachments')
         end
 
         it 'contains url' do
           expect(response.body).
             to be_json_eql(question.attachments.first.file.url.to_json).
               at_path('question/attachments/0/url')
+        end
+      end
+    end
+  end
+
+  describe 'POST /create' do
+    context 'unauthenticated' do
+      it 'returns 401 status if there is no access_token' do
+        post api_v1_questions_path, as: :json
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        post api_v1_questions_path, as: :json, params: {access_token: '1234'}
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authenticated' do
+      let(:access_token) { create(:access_token) }
+      let(:params) {
+                      {
+                        as: :json, params:
+                        {
+                          access_token: access_token.token,
+                          question: { title: 'Title', body: 'Body' }
+                        }
+                      }
+                    }
+      it 'returns 201 status' do
+        post '/api/v1/questions', params
+        expect(response.status).to eq 201
+      end
+
+      it 'creates new question' do
+        expect { post '/api/v1/questions/', params }.to change(Question.all, :count).by(1)
+      end
+
+      context 'with invalid attributes' do
+        let(:params) {
+                        {
+                          as: :json, params:
+                          {
+                            access_token: access_token.token,
+                            question: { title: nil, body: 'Body' }
+                          }
+                        }
+                      }
+
+        it 'returns 422 status' do
+          post '/api/v1/questions', params
+          expect(response.status).to eq 422
+        end
+
+        it 'returns title error' do
+          post '/api/v1/questions', params
+          expect(response.body).to be_json_eql("can't be blank".to_json).at_path('errors/title/0/')
+        end
+
+        it 'returns body error' do
+          post '/api/v1/questions', as: :json, params: {
+                                                          access_token: access_token.token,
+                                                          question: { title: 'Title', body: nil }
+                                                        }
+          expect(response.body).to be_json_eql("can't be blank".to_json).at_path('errors/body/0/')
         end
       end
     end
