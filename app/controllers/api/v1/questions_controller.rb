@@ -1,10 +1,9 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   before_action :set_questions, only: [:index, :create]
 
-  skip_authorization_check
+  authorize_resource
 
   def index
-
     respond_with @questions, each_serializer: QuestionsListSerializer
   end
 
@@ -14,8 +13,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    respond_with(@question = @questions.create(question_params),
-      serializer: SingleQuestionSerializer)
+    @question = @questions.create(question_params)
+    respond_with @question, serializer: SingleQuestionSerializer
   end
 
   private

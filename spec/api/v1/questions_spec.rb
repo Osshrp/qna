@@ -140,6 +140,14 @@ describe 'Questions API' do
         expect { post api_v1_questions_path, params }.to change(Question.all, :count).by(1)
       end
 
+      %w(id title body created_at updated_at rating).each do |attr|
+        it "question object contains #{attr}" do
+          post api_v1_questions_path, params
+          expect(response.body).
+            to be_json_eql(Question.first.send(attr.to_sym).to_json).at_path("question/#{attr}")
+        end
+      end
+
       context 'with invalid attributes' do
         let(:params) {
                         {
