@@ -8,7 +8,11 @@ describe 'Profile API' do
 
   describe 'GET me' do
 
-    it_behaves_like 'unauthenticated'
+    it_behaves_like 'unauthenticated' do
+      let(:request_to_resource) { get '/api/v1/profiles/me', as: :json }
+      let(:request_with_invalid_token) { get '/api/v1/profiles/me',
+          as: :json, params: { access_token: '12345' } }
+    end
 
     context 'authorized' do
       before { get '/api/v1/profiles/me', as: :json, params: {access_token: access_token.token} }
@@ -32,7 +36,11 @@ describe 'Profile API' do
   end
 
   describe 'GET #index' do
-    it_behaves_like 'unauthenticated'
+    it_behaves_like 'unauthenticated' do
+      let(:request_to_resource) { get '/api/v1/profiles/me', as: :json }
+      let(:request_with_invalid_token) { get '/api/v1/profiles/me',
+          as: :json, params: { access_token: '12345' } }
+    end
 
     context 'authorized' do
       before { get '/api/v1/profiles', as: :json, params: {access_token: access_token.token} }

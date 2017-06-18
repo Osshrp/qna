@@ -1,24 +1,23 @@
 require 'rails_helper'
+require_relative 'concerns/unauthenticated_spec.rb'
 
 describe 'Answers API' do
   let(:question) { create(:question) }
   describe 'GET /index' do
-    context 'unauthenticated' do
-      it 'returns 401 status if there is no access_token' do
-        get api_v1_question_answers_path(question), as: :json
-        expect(response.status).to eq 401
-      end
 
-      it 'returns 401 status if access_token is invalid' do
-        get api_v1_question_answers_path(question), as: :json, params: {access_token: '1234'}
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'unauthenticated' do
+      let(:request_to_resource) { get api_v1_question_answers_path(question), as: :json }
+      let(:request_with_invalid_token) { get api_v1_question_answers_path(question),
+          as: :json, params: { access_token: '12345' } }
     end
 
     context 'authenticated' do
       let!(:answers) { create_list(:answer, 2, question: question) }
       let(:access_token) { create(:access_token) }
-      before { get api_v1_question_answers_path(question), as: :json, params: {access_token: access_token.token} }
+      before do
+        get api_v1_question_answers_path(question),
+         as: :json, params: {access_token: access_token.token}
+      end
 
       it 'returns 200 status code' do
         expect(response).to be_success
@@ -41,17 +40,10 @@ describe 'Answers API' do
     let(:answer) { create(:answer, question: question) }
     let!(:comment) { create(:comment, commentable: answer) }
 
-    context 'unauthenticated' do
-      it 'returns 401 status if there is no access_token' do
-        get api_v1_answer_path(answer), as: :json
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get api_v1_answer_path(answer),
-          as: :json, params: {access_token: '1234'}
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'unauthenticated' do
+      let(:request_to_resource) { get api_v1_answer_path(answer), as: :json }
+      let(:request_with_invalid_token) { get api_v1_answer_path(answer),
+          as: :json, params: { access_token: '12345' } }
     end
 
     context 'authenticated' do
@@ -99,6 +91,65 @@ describe 'Answers API' do
           expect(response.body).
             to be_json_eql(answer.attachments.first.file.url.to_json).
               at_path('answer/attachments/0/url')
+        end
+      end
+    end
+  end
+  describe 'POST /create' do
+
+    it_behaves_like 'unauthenticated' do
+      let(:request_to_resource) { post api_v1_question_answers_path(question), as: :json }
+      let(:request_with_invalid_token) { post api_v1_question_answers_path(question),
+          as: :json, params: { access_token: '12345' } }
+    end
+
+    context 'authenticated' do
+      let(:access_token) { create(:access_token) }
+      let(:params) {
+                      {
+                        as: :json, params:
+                        {
+                          access_token: access_token.token,
+                          question_id: question,
+                          answer: { body: 'Body' }
+                        }
+                      }
+                    }
+      it 'returns 201 status' do
+        post api_v1_question_answers_path(question), params
+        expect(response.status).to eq 201
+      end
+
+      it 'creates new question' do
+        expect { post api_v1_question_answers_path(question), params }
+          .to change(question.answers, :count).by(1)
+      end
+
+      context 'with invalid attributes' do
+        let(:params) {
+                        {
+                          as: :json, params:
+                          {
+                            access_token: access_token.token,
+                            question_id: question,
+                            answer: { body: nil }
+                          }
+                        }
+                      }
+
+        it 'returns 422 status' do
+          post api_v1_question_answers_path(question), params
+          expect(response.status).to eq 422
+        end
+
+        it 'returns error if body is nil' do
+          post api_v1_question_answers_path(question), params
+          expect(response.body).to be_json_eql("can't be blank".to_json).at_path('errors/body/0/')
+        end
+
+        it 'does not create answer in database' do
+          expect { post api_v1_question_answers_path(question), params }
+            .to_not change(question.answers, :count)
         end
       end
     end
