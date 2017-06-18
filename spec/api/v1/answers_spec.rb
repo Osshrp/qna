@@ -120,9 +120,17 @@ describe 'Answers API' do
         expect(response.status).to eq 201
       end
 
-      it 'creates new question' do
+      it 'creates new answer' do
         expect { post api_v1_question_answers_path(question), params }
           .to change(question.answers, :count).by(1)
+      end
+
+      %w(id body created_at updated_at rating).each do |attr|
+        it "answer object contains #{attr}" do
+          post api_v1_question_answers_path(question), params
+          expect(response.body).
+            to be_json_eql(Answer.first.send(attr.to_sym).to_json).at_path("answer/#{attr}")
+        end
       end
 
       context 'with invalid attributes' do

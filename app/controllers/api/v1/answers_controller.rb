@@ -3,7 +3,7 @@ class Api::V1::AnswersController < Api::V1::BaseController
 
   respond_to :json
 
-  skip_authorization_check
+  authorize_resource
 
   def index
     @answers = @question.answers
@@ -16,7 +16,8 @@ class Api::V1::AnswersController < Api::V1::BaseController
   end
 
   def create
-    respond_with @question.answers.create(answer_params)
+    respond_with(@question.answers.create(answer_params),
+      serializer: SingleAnswerSerializer)
   end
 
   private
