@@ -8,10 +8,9 @@ describe 'Profile API' do
 
   describe 'GET me' do
 
-    it_behaves_like 'unauthenticated' do
-      let(:request_to_resource) { get '/api/v1/profiles/me', as: :json }
-      let(:request_with_invalid_token) { get '/api/v1/profiles/me',
-          as: :json, params: { access_token: '12345' } }
+    it_behaves_like 'API Authenticable' do
+      let(:request_path) { '/api/v1/profiles/me' }
+      let(:method) { :get }
     end
 
     context 'authorized' do
@@ -36,10 +35,10 @@ describe 'Profile API' do
   end
 
   describe 'GET #index' do
-    it_behaves_like 'unauthenticated' do
-      let(:request_to_resource) { get '/api/v1/profiles/me', as: :json }
-      let(:request_with_invalid_token) { get '/api/v1/profiles/me',
-          as: :json, params: { access_token: '12345' } }
+
+    it_behaves_like 'API Authenticable' do
+      let(:request_path) { '/api/v1/profiles' }
+      let(:method) { :get }
     end
 
     context 'authorized' do
@@ -53,5 +52,9 @@ describe 'Profile API' do
         expect(response.body).to be_eql users.to_json
       end
     end
+  end
+
+  def request_to_resource(method, path, options = {})
+    get path, as: :json, params: options
   end
 end

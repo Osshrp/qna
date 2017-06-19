@@ -8,6 +8,6 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   end
 
   def me
-    respond_with(current_resource_owner)
+    respond_with(current_resource_owner, each_serializer: ProfilesSerializer)
   end
 end
