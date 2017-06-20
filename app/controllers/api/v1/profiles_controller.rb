@@ -4,10 +4,10 @@ class Api::V1::ProfilesController < Api::V1::BaseController
 
   def index
     @profiles = User.where.not(id: current_resource_owner)
-    respond_with @profiles
+    respond_with @profiles, each_serializer: ProfilesSerializer
   end
 
   def me
-    respond_with(current_resource_owner, each_serializer: ProfilesSerializer)
+    respond_with(current_resource_owner)
   end
 end

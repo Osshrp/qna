@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_relative 'concerns/votable_spec.rb'
 
 RSpec.describe Question, type: :model do
   it { should have_many(:answers).dependent(:destroy) }

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 shared_examples_for 'commented' do
 
   let(:resource) { controller.class.name.deconstantize.singularize.underscore.to_sym }

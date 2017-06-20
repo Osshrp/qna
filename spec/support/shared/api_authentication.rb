@@ -1,4 +1,4 @@
-shared_examples_for 'API Authenticable' do
+shared_examples_for 'API unauthenticable' do
   context 'unauthenticated' do
     it 'returns 401 status if there is no access_token' do
       request_to_resource method, request_path

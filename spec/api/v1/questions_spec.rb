@@ -1,10 +1,9 @@
 require 'rails_helper'
-require_relative 'concerns/unauthenticated_spec.rb'
 
 describe 'Questions API' do
   describe 'GET /index' do
 
-    it_behaves_like 'API Authenticable' do
+    it_behaves_like 'API unauthenticable' do
       let(:request_path) { '/api/v1/questions' }
       let(:method) { :get }
     end
@@ -17,12 +16,8 @@ describe 'Questions API' do
 
       before { get '/api/v1/questions', as: :json, params: {access_token: access_token.token} }
 
-      it 'returns 200 status code' do
-        expect(response).to be_success
-      end
-
-      it 'returns list of questions' do
-        expect(response.body).to have_json_size(2).at_path("questions")
+      it_behaves_like 'API indexable' do
+        let(:resources_name) { 'questions' }
       end
 
       %w(id title body created_at updated_at).each do |attr|
@@ -56,7 +51,7 @@ describe 'Questions API' do
     let(:question) { create(:question) }
     let!(:comment) { create(:comment, commentable: question) }
 
-    it_behaves_like 'API Authenticable' do
+    it_behaves_like 'API unauthenticable' do
       let(:request_path) { api_v1_question_path(question) }
       let(:method) { :get }
     end
@@ -112,7 +107,7 @@ describe 'Questions API' do
 
   describe 'POST /create' do
 
-    it_behaves_like 'API Authenticable' do
+    it_behaves_like 'API unauthenticable' do
       let(:request_path) { api_v1_questions_path }
       let(:method) { :post }
     end
