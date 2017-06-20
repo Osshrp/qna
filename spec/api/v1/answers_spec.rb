@@ -1,14 +1,12 @@
 require 'rails_helper'
-require_relative 'concerns/unauthenticated_spec.rb'
 
 describe 'Answers API' do
   let(:question) { create(:question) }
   describe 'GET /index' do
 
-    it_behaves_like 'unauthenticated' do
-      let(:request_to_resource) { get api_v1_question_answers_path(question), as: :json }
-      let(:request_with_invalid_token) { get api_v1_question_answers_path(question),
-          as: :json, params: { access_token: '12345' } }
+    it_behaves_like 'API unauthenticable' do
+      let(:request_path) { api_v1_question_answers_path(question) }
+      let(:method) { :get }
     end
 
     context 'authenticated' do
@@ -19,12 +17,8 @@ describe 'Answers API' do
          as: :json, params: {access_token: access_token.token}
       end
 
-      it 'returns 200 status code' do
-        expect(response).to be_success
-      end
-
-      it 'returns list of answers' do
-        expect(response.body).to have_json_size(2).at_path("answers")
+      it_behaves_like 'API indexable' do
+        let(:resources_name) { 'answers' }
       end
 
       %w(id body created_at updated_at rating).each do |attr|
@@ -40,10 +34,9 @@ describe 'Answers API' do
     let(:answer) { create(:answer, question: question) }
     let!(:comment) { create(:comment, commentable: answer) }
 
-    it_behaves_like 'unauthenticated' do
-      let(:request_to_resource) { get api_v1_answer_path(answer), as: :json }
-      let(:request_with_invalid_token) { get api_v1_answer_path(answer),
-          as: :json, params: { access_token: '12345' } }
+    it_behaves_like 'API unauthenticable' do
+      let(:request_path) { api_v1_answer_path(answer) }
+      let(:method) { :get }
     end
 
     context 'authenticated' do
@@ -97,10 +90,10 @@ describe 'Answers API' do
   end
   describe 'POST /create' do
 
-    it_behaves_like 'unauthenticated' do
-      let(:request_to_resource) { post api_v1_question_answers_path(question), as: :json }
-      let(:request_with_invalid_token) { post api_v1_question_answers_path(question),
-          as: :json, params: { access_token: '12345' } }
+
+    it_behaves_like 'API unauthenticable' do
+      let(:request_path) { api_v1_question_answers_path(question) }
+      let(:method) { :post}
     end
 
     context 'authenticated' do
@@ -161,5 +154,9 @@ describe 'Answers API' do
         end
       end
     end
+  end
+
+  def request_to_resource(method, path, options = {})
+    send(method, path, as: :json, params: options)
   end
 end
