@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170621060243) do
+ActiveRecord::Schema.define(version: 20170622111024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,15 @@ ActiveRecord::Schema.define(version: 20170621060243) do
     t.index ["user_id"], name: "index_questions_on_user_id", using: :btree
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "question_id"
+    t.index ["question_id"], name: "index_subscriptions_on_question_id", using: :btree
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
@@ -144,12 +153,12 @@ ActiveRecord::Schema.define(version: 20170621060243) do
   end
 
   create_table "votes", force: :cascade do |t|
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "value"
     t.integer  "votable_id"
     t.string   "votable_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "user_id"
-    t.integer  "value"
     t.index ["user_id"], name: "index_votes_on_user_id", using: :btree
     t.index ["votable_id", "votable_type"], name: "index_votes_on_votable_id_and_votable_type", using: :btree
   end
@@ -158,4 +167,6 @@ ActiveRecord::Schema.define(version: 20170621060243) do
   add_foreign_key "comments", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "subscriptions", "questions"
+  add_foreign_key "subscriptions", "users"
 end
