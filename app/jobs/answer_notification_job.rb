@@ -3,7 +3,7 @@ class AnswerNotificationJob < ApplicationJob
 
   def perform(answer)
     answer.question.subscriptions.each do |subscription|
-      AnswerMailer.notify(subscription.user, answer).deliver_later
+      AnswerMailer.notify(subscription.user, answer).deliver_later(wait: 1.minute)
     end
   end
 end

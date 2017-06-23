@@ -32,10 +32,9 @@ RSpec.describe Answer, type: :model do
 
   describe '#send_email' do
     let(:question) { create(:question) }
-
+    let(:answer) { create(:answer) }
     it 'should send email to author after create answer' do
-      byebug
-      expect(AnswerMailer).to receive(:notify).with(instance_of(Answer)).and_call_original
+      expect(AnswerMailer).to receive(:notify).and_call_original
       question.answers.create(body: 'body', user: question.user)
     end
   end
