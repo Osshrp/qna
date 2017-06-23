@@ -1,4 +1,3 @@
 h1 Answer#notify
 p = @greeting + ", the question #{@answer.question.title} has new answer"
-
-= link_to @answer.question.title, @answer.question_url(question)
+= link_to @answer.question.title, question_url(@answer.question)
