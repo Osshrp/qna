@@ -24,7 +24,7 @@ describe 'Answers API' do
       %w(id body created_at updated_at rating).each do |attr|
         it "question object contains #{attr}" do
           expect(response.body).
-            to be_json_eql(answers.last.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
+            to be_json_eql(answers.first.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
         end
       end
     end
