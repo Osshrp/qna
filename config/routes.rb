@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   resources :questions do
     resources :comments, shallow: true, module: :questions
+    resources :subscriptions, shallow: true, only: [:create, :destroy]
     resources :answers, shallow: true do
       patch :set_best, on: :member
       concerns :votable
