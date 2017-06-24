@@ -28,6 +28,7 @@ describe Ability do
     let(:other_answer) { create(:answer, question: create(:question)) }
     let(:answer) { create(:answer, question: question, user: user) }
     let(:other_users_question_comment) { create(:comment, commentable: question, user: other_user) }
+    let(:other_subscription) { create(:subscription) }
 
     before do
       file = File.open("#{Rails.root}/spec/spec_helper.rb")
@@ -41,6 +42,7 @@ describe Ability do
     it { should be_able_to :create, Question }
     it { should be_able_to :create, Answer }
     it { should be_able_to :create, Comment }
+    it { should be_able_to :create, Subscription}
 
     it { should be_able_to :update, question, user: user }
     it { should_not be_able_to :update, other_users_question, user: user }
@@ -51,6 +53,10 @@ describe Ability do
     it { should_not be_able_to :destroy, other_users_question, user: user }
     it { should be_able_to :destroy, answer, user: user}
     it { should_not be_able_to :destroy, other_users_answer, user: user }
+    it { should be_able_to :destroy, question.subscriptions.first, user: user}
+    it { should_not be_able_to :destroy, other_subscription, user: user}
+
+
 
     it { should be_able_to :destroy, create(:comment, commentable: question, user: user), user: user }
     it { should_not be_able_to :destroy, other_users_question_comment, user: user }
