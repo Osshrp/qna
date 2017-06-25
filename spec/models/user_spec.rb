@@ -22,6 +22,12 @@ RSpec.describe User do
     end
   end
 
+  describe '#unsubscribed_from' do
+    it 'should return false if user is subscribed to question' do
+      expect(user_with_questions).to_not be_unsubscribed_from(user_with_questions.questions.first)
+    end
+  end
+
   describe '.find_for_oauth' do
     let!(:user)  { create(:user) }
     let(:auth) { OmniAuth::AuthHash.new('devise.provider' => 'facebook', 'devise.uid' => '123456') }

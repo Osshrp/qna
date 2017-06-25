@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper.rb'
 
 feature 'View question', %q{
   In order to find an answer to question
@@ -7,6 +7,7 @@ feature 'View question', %q{
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question_with_answers) }
+  given(:authors_question) { create(:question, user: user) }
 
   context 'Authenticated user' do
     before { sign_in(user) }
@@ -20,8 +21,20 @@ feature 'View question', %q{
       expect(page).to have_link 'Subscribe'
     end
 
-    scenario 'author does not see subscribe link'
-    scenario 'if author hase unsubscribed, he see subscribe link'
+    scenario 'author does not see subscribe link' do
+      visit question_path(authors_question)
+
+      expect(page).to_not have_link 'Subscribe'
+      expect(page).to have_link 'Unsubscribe'
+    end
+
+    scenario 'if user has been unsubscribed, he see subscribe link' do
+      visit question_path(authors_question)
+
+      click_on 'Unsubscribe'
+      expect(page).to have_link 'Subscribe'
+      expect(page).to_not have_link 'Unsubscribe'
+    end
   end
 
   context 'Unauthenticated user' do
@@ -29,7 +42,11 @@ feature 'View question', %q{
       visit_and_check_question
     end
 
-    scenario 'does not see subscribe link'
+    scenario 'does not see subscribe link' do
+      visit question_path(question)
+
+      expect(page).to_not have_link 'Subscribe'
+    end
   end
 
   private
