@@ -29,13 +29,4 @@ RSpec.describe Answer, type: :model do
       expect(answer.best).to be_falsey
     end
   end
-
-  describe '#send_email' do
-    let(:question) { create(:question) }
-    let(:answer) { create(:answer) }
-    it 'should send email to author after create answer' do
-      expect(AnswerMailer).to receive(:notify).and_call_original
-      question.answers.create(body: 'body', user: question.user)
-    end
-  end
 end
