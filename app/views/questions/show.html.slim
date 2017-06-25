@@ -11,6 +11,11 @@
         ul class="question-#{@question.id}-comments-list list-group"
           = render 'common/comments', resource: @question
         = render 'comments/comment_form', resource: @question, resource_name: 'question'
+      - if can? :create, Subscription
+        - if current_user.unsubscribed_from?(@question)
+          = link_to 'Subscribe', question_subscriptions_path(@question), method: :post
+        - else
+          = link_to 'Unsubscribe', subscription_path(@subscription), method: :delete
       - if can? :destroy, @question
         .edit-delete
         = link_to 'Edit question', '', class: 'edit-question-link',

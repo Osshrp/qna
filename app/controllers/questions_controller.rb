@@ -14,6 +14,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question_vote = @question.votes.where(user: current_user).first
+    @subscription = @question.subscriptions.where(user: current_user).first
     gon.question_id = @question.id
     gon.current_user_id = current_user.id if current_user
     respond_with @question
