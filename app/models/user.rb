@@ -16,8 +16,8 @@ class User < ApplicationRecord
     entity.user_id == id
   end
 
-  def unsubscribed_from?(question)
-    subscriptions.where(question: question, user: self).first.blank?
+  def subscribed_to?(question)
+    subscriptions.find_by(question: question).present?
   end
 
   def self.find_for_oauth(auth)

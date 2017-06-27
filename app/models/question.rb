@@ -10,12 +10,14 @@ class Question < ApplicationRecord
 
   after_create :subscribe_author
 
+  scope :daily, -> { where('created_at > ?', 1.day.ago) }
+
   def subscribe(user)
     subscriptions.create(user: user)
   end
 
   def unsubscribe(user)
-    subscriptions.where(user: user).first.destroy
+    subscriptions.find_by(user: user).destroy
   end
 
   private

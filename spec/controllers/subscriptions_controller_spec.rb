@@ -36,7 +36,7 @@ RSpec.describe SubscriptionsController, type: :controller do
         it 'deletes users subscription' do
           post :create, params: { question_id: question }
           expect { delete :destroy, params: { id: question.subscriptions.last } }
-            .to change(question.subscriptions, :count).by(-1)
+            .to change(Subscription, :count).by(-1)
         end
         it 'does not deletes other users subscription' do
           expect { delete :destroy, params: { id: question.subscriptions.first } }
