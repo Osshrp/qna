@@ -22,9 +22,13 @@ RSpec.describe User do
     end
   end
 
-  describe '#unsubscribed_from' do
-    it 'should return false if user is subscribed to question' do
-      expect(user_with_questions).to_not be_unsubscribed_from(user_with_questions.questions.first)
+  describe '#subscribed_to' do
+    it 'should return true if user is subscribed to question' do
+      expect(user_with_questions).to be_subscribed_to(user_with_questions.questions.first)
+    end
+
+    it 'should retutn false if user is not subscribed to question' do
+      expect(user).to_not be_subscribed_to(create(:question))
     end
   end
 

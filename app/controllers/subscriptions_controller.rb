@@ -6,14 +6,14 @@ class SubscriptionsController < ApplicationController
   authorize_resource
 
   def create
-    @subscription = @question.subscriptions.create(user: current_user)
+    @subscription = @question.subscribe(current_user)
     respond_with(@subscription) do |format|
       format.html { redirect_to question_path(@question) }
     end
   end
 
   def destroy
-    respond_with(@subscription.destroy) do |format|
+    respond_with(@subscription.question.unsubscribe(current_user)) do |format|
       format.html { redirect_to question_path(@subscription.question) }
     end
   end
