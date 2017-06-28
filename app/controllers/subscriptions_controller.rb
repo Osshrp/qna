@@ -13,7 +13,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def destroy
-    respond_with(@subscription.question.unsubscribe(current_user)) do |format|
+    respond_with(@subscription.destroy) do |format|
       format.html { redirect_to question_path(@subscription.question) }
     end
   end
