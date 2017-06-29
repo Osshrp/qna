@@ -30,6 +30,13 @@ html lang="en"
                 li= link_to current_user.email, '#'
               - else
                 li= link_to 'Sign in', new_user_session_path
+              / li= link_to 'Search', '#'
+            = form_tag '/search', class: 'navbar-form navbar-left'
+              .form-group
+                =text_field_tag 'Search', nil, placeholder: 'Search'
+              .form-group
+                =select_tag :search
+              =submit_tag 'Submit', class: 'btn btn-primary'
 
     .container
       .row
