@@ -22,3 +22,6 @@ config/database.yml
 /public/uploads/*
 dump.rdb
 .DS_Store
+
+config/*shpinx.conf
+db/shpinx
