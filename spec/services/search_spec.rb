@@ -2,18 +2,21 @@ require 'rails_helper'
 
 describe '.execute' do
 
-  let(:question) { create(:question, title: '111') }
-  let!(:answer) { create(:answer, body: '111') }
-  let!(:comment) { create(:comment, body: '111', commentable: question) }
-  let!(:user) { create(:user, email: 'test@test.com') }
-  let!(:query) { '111' }
+  let(:query) { '111' }
 
-  {questions: :title, answers: :body, comments: :body, users: :email}.each do |region, attr|
-    it "should find object in #{region} and returns" do
-      query = 'test@test.com' if :region == :users
-      result = Search.execute(query.to_s, region.to_s).first
-      byebug
-      expect(result).to eq query
+  %w{questions answers comments users}.each do |region|
+    it "should send search message to class" do
+      expect(capitalize_first(region).singularize.constantize).to receive(:search).with(query)
+      Search.execute(query, region)
     end
+  end
+
+  it 'should send search message to ThinkingSphinx' do
+    expect(ThinkingSphinx).to receive(:search).with(query)
+    Search.execute(query, 'all')
+  end
+
+  def capitalize_first(string)
+    string.sub(/\S/, &:upcase)
   end
 end
