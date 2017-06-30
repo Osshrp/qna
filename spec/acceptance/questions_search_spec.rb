@@ -5,12 +5,12 @@ feature 'Search in questions', %q{
   I need to be able to search it
 } do
 
-  given(:question) { create(:question, title: '111') }
+  given!(:question) { create(:question, title: '111') }
 
   scenario 'User tries to search question by title' do
     visit questions_path
-    click_on 'Search'
     fill_in 'Search', with: '111'
+    select('questions', from: 'scope')
     click_on 'Find'
 
     expect(page).to have_link '111'
