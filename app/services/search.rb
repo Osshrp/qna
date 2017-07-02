@@ -1,11 +1,12 @@
 class Search
+
   class << self
     def execute(query, region)
       attr = %w(all questions answers comments users)
       if region == 'all'
-        ThinkingSphinx.search(query)
+        ThinkingSphinx.search(escape(query))
       else
-        klass(region).search(query) if attr.include?(region)
+        klass(region).search(escape(query)) if attr.include?(region)
       end
     end
 
@@ -15,6 +16,10 @@ class Search
 
     def capitalize_first(string)
       string.sub(/\S/, &:upcase)
+    end
+
+    def escape(query)
+      ThinkingSphinx::Query.escape(query)
     end
   end
 end
