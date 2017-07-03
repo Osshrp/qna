@@ -1,21 +1,18 @@
 class Search
 
+  TYPES = %w(all questions answers comments users)
+
   class << self
     def execute(query, region)
-      attr = %w(all questions answers comments users)
       if region == 'all'
         ThinkingSphinx.search(escape(query))
       else
-        klass(region).search(escape(query)) if attr.include?(region)
+        klass(region).search(escape(query)) if TYPES.include?(region)
       end
     end
 
     def klass(string)
-      capitalize_first(string).singularize.constantize
-    end
-
-    def capitalize_first(string)
-      string.sub(/\S/, &:upcase)
+      string.classify.constantize
     end
 
     def escape(query)

@@ -34,7 +34,7 @@ html lang="en"
               .form-group
                 =text_field_tag 'search', nil, class: 'form-control' , placeholder: 'Search'
               .form-group
-                =select_tag :scope, options_for_select(%w(all questions answers comments users)),
+                =select_tag :resource, options_for_select(%w(all questions answers comments users)),
                     { class: 'form-control' }
               .form-group
                 =submit_tag 'Find', class: 'btn btn-default'
