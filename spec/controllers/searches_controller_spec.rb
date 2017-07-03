@@ -3,10 +3,14 @@ require 'rails_helper'
 RSpec.describe SearchesController, type: :controller do
   let(:question) { create(:question, title: '111') }
 
-  before { get :show, params: { search: '111', scope: 'questions' } }
+  before { get :show, params: { search: '111', resource: 'questions' } }
   describe 'GET #index' do
-    it 'assigns region to @region' do
-      expect(assigns(:region)).to eq 'questions'
+    it 'assigns resource to @resource' do
+      expect(assigns(:resource)).to eq 'questions'
+    end
+
+    it 'assigns search to @search_string' do
+      expect(assigns(:search_string)).to eq '111'
     end
 
     it 'renders show view' do

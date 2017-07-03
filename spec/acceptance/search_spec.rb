@@ -2,17 +2,16 @@ require_relative 'acceptance_helper'
 require_relative '../support/sphinx_helper'
 
 feature 'Search', %q{
-  In order to find object,
+  In order to find an object,
   I need to be able to search it
 } do
 
-  given!(:question) { create(:question, title: "question's title") }
-  given!(:answer) { create(:answer, body: "answer's body") }
+
+  given!(:question) { create(:question, title: 'search_string') }
+  given!(:answer) { create(:answer, body: 'search_string') }
   given!(:comment) { create(:comment, commentable: question,
-    body: "comment's body") }
-  # given!(:comment) { create(:comment, commentable: answer,
-  #   body: "answer's comment body") }
-  given!(:user) { create(:user, email: 'test@test.com') }
+    body: 'search_string') }
+  given!(:user) { create(:user, email: 'search_string@test.com') }
 
   background do
     index
@@ -20,42 +19,57 @@ feature 'Search', %q{
   end
 
   scenario 'User tries to search question title in all region', js: true do
-    fill_in 'Search', with: "question's title"
-    select('all', from: 'scope')
+    fill_in 'Search', with: 'search_string'
+    select('all', from: 'resource')
     click_on 'Find'
 
-    expect(page).to have_link "question's title"
+    expect(page).to have_link 'search_string', href: question_path(question)
+    expect(page).to have_link 'search_string', href: answer_path(answer)
+    expect(page).to have_link 'search_string', href: comment_path(comment)
+    expect(page).to have_content 'search_string@test.com'
   end
 
   scenario 'User tries to search question title in question region', js: true do
-    fill_in 'Search', with: "question's title"
-    select('questions', from: 'scope')
+    fill_in 'Search', with: 'search_string'
+    select('questions', from: 'resource')
     click_on 'Find'
 
-    expect(page).to have_link "question's title"
+    expect(page).to have_link 'search_string', href: question_path(question)
+    expect(page).to_not have_link 'search_string', href: answer_path(answer)
+    expect(page).to_not have_link 'search_string', href: comment_path(comment)
+    expect(page).to_not have_content 'search_string@test.com'
   end
 
   scenario 'User tries to search answer body in answers region', js: true do
-    fill_in 'Search', with: "answer's body"
-    select('answers', from: 'scope')
+    fill_in 'Search', with: 'search_string'
+    select('answers', from: 'resource')
     click_on 'Find'
 
-    expect(page).to have_link "answer's body"
+    expect(page).to_not have_link 'search_string', href: question_path(question)
+    expect(page).to have_link 'search_string', href: answer_path(answer)
+    expect(page).to_not have_link 'search_string', href: comment_path(comment)
+    expect(page).to_not have_content 'search_string@test.com'
   end
 
   scenario 'User tries to search comment body in comments region', js: true do
-    fill_in 'Search', with: "comment's body"
-    select('comments', from: 'scope')
+    fill_in 'Search', with: 'search_string'
+    select('comments', from: 'resource')
     click_on 'Find'
 
-    expect(page).to have_link "comment's body"
+    expect(page).to_not have_link 'search_string', href: question_path(question)
+    expect(page).to_not have_link 'search_string', href: answer_path(answer)
+    expect(page).to have_link 'search_string', href: comment_path(comment)
+    expect(page).to_not have_content 'search_string@test.com'
   end
 
   scenario 'User tries to search user email in users region', js: true do
-    fill_in 'Search', with: "test@test.com"
-    select('users', from: 'scope')
+    fill_in 'Search', with: 'search_string'
+    select('users', from: 'resource')
     click_on 'Find'
 
-    expect(page).to have_content "test@test.com"
+    expect(page).to_not have_link 'search_string', href: question_path(question)
+    expect(page).to_not have_link 'search_string', href: answer_path(answer)
+    expect(page).to_not have_link 'search_string', href: comment_path(comment)
+    expect(page).to have_content 'search_string@test.com'
   end
 end
