@@ -34,6 +34,6 @@ class Answer < ApplicationRecord
   end
 
   def send_email
-    AnswerNotificationJob.perform_later(self)
+    # AnswerNotificationJob.perform_later(self)
   end
 end
