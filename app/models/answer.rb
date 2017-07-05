@@ -8,7 +8,7 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   after_create :publish_answer
-  # after_create :send_email
+  after_create :send_email
 
   def set_best
     transaction do
