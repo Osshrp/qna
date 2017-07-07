@@ -1,7 +1,7 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-ready = ->
+$ ->
   $('.best-answer-bage').closest('div').prependTo('.answers-list')
 
   App.cable.subscriptions.create('AnswersChannel', {
@@ -16,8 +16,16 @@ ready = ->
       question = json.question
       $('.answers-list').append(JST["answer"]({answer: answer, attachments: attachments, question: question}))
   })
-#
-$(document).on('turbolinks:load', ready)
+
+# $(document).on('turbolinks:load', ready)
+# $(document).on('turbolinks:visit', ready)
+# $(document).ready(ready)
+# $(document).on('ready', ready)
+# $(window).load(ready)
+# $(window).on('load', ready)
+# $(document).on('page:load', ready)
+# document.addEventListener("turbolinks:load", ready)
+# $(document).on('click', '.question-link', ready)
 
 $(document).on('click', '.edit-answer-link', (e) ->
   e.preventDefault()

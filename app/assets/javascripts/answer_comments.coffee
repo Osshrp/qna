@@ -1,6 +1,3 @@
-# $ ->
-#   commentsSubscription("answer");
-
 $ ->
   App.cable.subscriptions.create('AnswersCommentsChannel', {
     connected: ->

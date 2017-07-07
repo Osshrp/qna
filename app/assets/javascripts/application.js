@@ -16,7 +16,6 @@
 //= require twitter/bootstrap
 //= require action_cable
 //= require cocoon
-//= require turbolinks
 //= require_tree .
 
 var App = App || {};
