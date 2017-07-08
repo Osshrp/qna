@@ -1,8 +1,12 @@
 $ ->
   App.cable.subscriptions.create('AnswersCommentsChannel', {
     connected: ->
-      answer_id = $(".answer").data("id")
-      @perform('follow', commentable_name: 'answer', commentable_id: answer_id)
+      subscriptions = this
+      $('.answer').each ->
+        subscriptions.perform 'follow',
+          commentable_name: 'answer',
+          commentable_id: $(this).attr('data-id')
+
     received: (data) ->
       json = $.parseJSON(data)
       comment = json.comment
