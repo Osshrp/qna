@@ -24,7 +24,7 @@ feature 'Search', %q{
     click_on 'Find'
 
     expect(page).to have_link 'search_string', href: question_path(question)
-    expect(page).to have_link 'search_string', href: answer_path(answer)
+    expect(page).to have_link 'Answer: search_string', href: question_path(answer.question)
     expect(page).to have_link 'search_string', href: comment_path(comment)
     expect(page).to have_content 'search_string@test.com'
   end
@@ -35,7 +35,7 @@ feature 'Search', %q{
     click_on 'Find'
 
     expect(page).to have_link 'search_string', href: question_path(question)
-    expect(page).to_not have_link 'search_string', href: answer_path(answer)
+    expect(page).to_not have_link 'Answer: search_string', href: question_path(answer.question)
     expect(page).to_not have_link 'search_string', href: comment_path(comment)
     expect(page).to_not have_content 'search_string@test.com'
   end
@@ -46,7 +46,7 @@ feature 'Search', %q{
     click_on 'Find'
 
     expect(page).to_not have_link 'search_string', href: question_path(question)
-    expect(page).to have_link 'search_string', href: answer_path(answer)
+    expect(page).to have_link 'Answer: search_string', href: question_path(answer.question)
     expect(page).to_not have_link 'search_string', href: comment_path(comment)
     expect(page).to_not have_content 'search_string@test.com'
   end
