@@ -10,6 +10,7 @@ class Question < ApplicationRecord
 
   after_create :subscribe_author
 
+  default_scope { order(:created_at) }
   scope :daily, -> { where('created_at > ?', 1.day.ago) }
 
   def subscribe(user)

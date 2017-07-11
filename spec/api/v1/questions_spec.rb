@@ -10,7 +10,7 @@ describe 'Questions API' do
 
     context 'authenticated' do
       let(:access_token) { create(:access_token) }
-      let!(:questions) { create_list(:question, 2) }
+      let!(:questions) { create_list(:question, 3) }
       let(:question) { questions.first }
       let!(:answer) { create(:answer, question: question) }
 
@@ -18,6 +18,7 @@ describe 'Questions API' do
 
       it_behaves_like 'API indexable' do
         let(:resources_name) { 'questions' }
+        let(:size) { 3 }
       end
 
       %w(id title body created_at updated_at).each do |attr|
@@ -136,7 +137,7 @@ describe 'Questions API' do
         it "question object contains #{attr}" do
           post api_v1_questions_path, params
           expect(response.body).
-            to be_json_eql(Question.first.send(attr.to_sym).to_json).at_path("question/#{attr}")
+            to be_json_eql(Question.last.send(attr.to_sym).to_json).at_path("question/#{attr}")
         end
       end
 

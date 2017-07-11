@@ -1,39 +1,40 @@
-div class='answer' id="answer-#{answer.id}" data-id="#{answer.id}"
-  li.list-group-item
-    div id="rate-answer-#{answer.id}"
-      = answer.rating
-    - if answer.best
-      span.badge.best-answer-bage The best answer
-    = answer.body
-    span class="pull-right like-badge" id="vote-answer-#{answer.id}"
-      - if current_user && vote(answer)
-        | You've #{vote(answer).show_value}d it
-    .vote
-      = render 'common/vote', resource: answer, vote: vote(answer)
-    ul.answer-attachments
-      = render 'common/attachments', resource: answer
-    div class="answer-#{answer.id}-comments"
-      ul class="answer-#{answer.id}-comments-list list-group"
-        = render 'common/comments', resource: answer
-    = render 'comments/comment_form', resource: answer, resource_name: 'answer', comment: @comment
-    .delete-edit-answer
-      - if can? :set_best, answer
-        = link_to 'The best', set_best_answer_path(answer), remote: true, method: :patch,
-          class: 'best-answer-link'
-      '
-      - if can? :destroy, answer
-        = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',
-          data: { answer_id: answer.id }
+- cache answer
+  div class='answer' id="answer-#{answer.id}" data-id="#{answer.id}"
+    li.list-group-item
+      div id="rate-answer-#{answer.id}"
+        = answer.rating
+      - if answer.best
+        span.badge.best-answer-bage The best answer
+      = answer.body
+      span class="pull-right like-badge" id="vote-answer-#{answer.id}"
+        - if current_user && vote(answer)
+          | You've #{vote(answer).show_value}d it
+      .vote
+        = render 'common/vote', resource: answer, vote: vote(answer)
+      ul.answer-attachments
+        = render 'common/attachments', resource: answer
+      div class="answer-#{answer.id}-comments"
+        ul class="answer-#{answer.id}-comments-list list-group"
+          = render 'common/comments', resource: answer
+      = render 'comments/comment_form', resource: answer, resource_name: 'answer', comment: @comment
+      .delete-edit-answer
+        - if can? :set_best, answer
+          = link_to 'The best', set_best_answer_path(answer), remote: true, method: :patch,
+            class: 'best-answer-link'
         '
-        = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
-        = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
-          .form-group
-            = f.label :body, 'Answer'
-            = f.text_area :body, class: 'form-control'
-          .form-group
-            = f.fields_for :attachments do |a|
-              = render 'common/attachment_fields', f: a
-            .links
-              = link_to_add_association 'add file', f, :attachments, partial: 'common/attachment_fields'
-          .form-group
-            = f.submit 'Save', class: 'btn btn-primary'
+        - if can? :destroy, answer
+          = link_to 'Delete answer', answer, remote: true, method: :delete, class: 'delete-answer-link',
+            data: { answer_id: answer.id }
+          '
+          = link_to 'Edit', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+          = form_for answer, remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+            .form-group
+              = f.label :body, 'Answer'
+              = f.text_area :body, class: 'form-control'
+            .form-group
+              = f.fields_for :attachments do |a|
+                = render 'common/attachment_fields', f: a
+              .links
+                = link_to_add_association 'add file', f, :attachments, partial: 'common/attachment_fields'
+            .form-group
+              = f.submit 'Save', class: 'btn btn-primary'

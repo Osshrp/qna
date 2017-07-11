@@ -10,7 +10,7 @@ describe 'Answers API' do
     end
 
     context 'authenticated' do
-      let!(:answers) { create_list(:answer, 2, question: question) }
+      let!(:answers) { create_list(:answer, 3, question: question) }
       let(:access_token) { create(:access_token) }
       before do
         get api_v1_question_answers_path(question),
@@ -19,12 +19,13 @@ describe 'Answers API' do
 
       it_behaves_like 'API indexable' do
         let(:resources_name) { 'answers' }
+        let(:size) { 3 }
       end
 
       %w(id body created_at updated_at rating).each do |attr|
         it "question object contains #{attr}" do
           expect(response.body).
-            to be_json_eql(answers.first.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
+            to be_json_eql(answers.last.send(attr.to_sym).to_json).at_path("answers/0/#{attr}")
         end
       end
     end

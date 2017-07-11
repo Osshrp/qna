@@ -45,6 +45,7 @@ describe 'Profile API' do
 
       it_behaves_like 'API indexable' do
         let(:resources_name) { 'users' }
+        let(:size) { 2 }
       end
 
       %w(id email created_at updated_at).each do |attr|
