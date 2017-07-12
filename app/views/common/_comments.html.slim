@@ -2,7 +2,7 @@
   p Comments:
   - resource.comments.each do |comment|
     - if comment.persisted?
-      - cache comment
+      - cache user_cache_key_for comment
         li class='well list-group-item' id="question-comment-#{comment.id}"
           = comment.body
           .comment-delete
